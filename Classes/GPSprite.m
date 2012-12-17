@@ -58,9 +58,9 @@ static GLKBaseEffect *SHARED_EFFECT;
             NSLog(@"error while loading texture: %@", error.localizedDescription);
         }
         else {
-            if(image.size.width == image.size.height &&
-               log2f(image.size.width) == roundf(log2f(image.size.width))) {
-                   NSLog(@"pow of two texture");
+            // Allow texture repeat if the texture size is a power of two
+            if(log2f(image.size.width) == roundf(log2f(image.size.width)) &&
+               log2f(image.size.height) == roundf(log2f(image.size.height))) {
                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                }
@@ -241,8 +241,6 @@ static GLKBaseEffect *SHARED_EFFECT;
     glBindVertexArrayOES(_vertexArray);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArrayOES(0);
-    
-    self.class.sharedEffect.constantColor = GLKVector4Make(1, 1, 1, 1);
 }
 
 @end

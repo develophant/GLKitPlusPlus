@@ -12,7 +12,6 @@
 		3A27E962167F82F2002011F1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A27E961167F82F2002011F1 /* CoreGraphics.framework */; };
 		3A27E968167F82F2002011F1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E966167F82F2002011F1 /* InfoPlist.strings */; };
 		3A27E96A167F82F2002011F1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A27E969167F82F2002011F1 /* main.m */; };
-		3A27E96E167F82F2002011F1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A27E96D167F82F2002011F1 /* AppDelegate.m */; };
 		3A27E970167F82F2002011F1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E96F167F82F2002011F1 /* Default.png */; };
 		3A27E972167F82F2002011F1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E971167F82F2002011F1 /* Default@2x.png */; };
 		3A27E974167F82F2002011F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E973167F82F2002011F1 /* Default-568h@2x.png */; };
@@ -20,19 +19,18 @@
 		3A27E985167F830B002011F1 /* GPNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A27E97F167F830B002011F1 /* GPNode.m */; };
 		3A27E986167F830B002011F1 /* GPScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A27E981167F830B002011F1 /* GPScheduler.m */; };
 		3A27E987167F830B002011F1 /* GPSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A27E983167F830B002011F1 /* GPSprite.m */; };
-		3A27E98A167F8357002011F1 /* SceneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A27E989167F8357002011F1 /* SceneController.m */; };
 		3A27E98C167F83EB002011F1 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A27E98B167F83EB002011F1 /* GLKit.framework */; };
 		3A27E98E167F83F5002011F1 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A27E98D167F83F5002011F1 /* OpenGLES.framework */; };
-		3A27E991167F878E002011F1 /* smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E98F167F878E002011F1 /* smiley.png */; };
-		3A27E992167F878E002011F1 /* smiley@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E990167F878E002011F1 /* smiley@2x.png */; };
-		3A27E995167FA2AD002011F1 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E993167FA2AD002011F1 /* background.png */; };
-		3A27E999167FAFF4002011F1 /* mountains.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E997167FAFF4002011F1 /* mountains.png */; };
-		3A27E99A167FAFF4002011F1 /* mountains@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E998167FAFF4002011F1 /* mountains@2x.png */; };
-		3A27E9A2167FB4DE002011F1 /* mountains_square.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E9A0167FB4DE002011F1 /* mountains_square.png */; };
-		3A27E9A3167FB4DE002011F1 /* mountains_square@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E9A1167FB4DE002011F1 /* mountains_square@2x.png */; };
-		3A27E9A5167FB55F002011F1 /* background512.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A27E9A4167FB55F002011F1 /* background512.png */; };
-		3A919892167FCF2000C22920 /* airplane.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A919890167FCF2000C22920 /* airplane.png */; };
-		3A919893167FCF2000C22920 /* airplane@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A919891167FCF2000C22920 /* airplane@2x.png */; };
+		3A91989D167FE00C00C22920 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A91989A167FE00C00C22920 /* AppDelegate.m */; };
+		3A91989E167FE00C00C22920 /* SceneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A91989C167FE00C00C22920 /* SceneController.m */; };
+		3A9198B5167FE5E800C22920 /* airplane.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A1167FE05E00C22920 /* airplane.png */; };
+		3A9198B6167FE5EA00C22920 /* airplane@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A2167FE05E00C22920 /* airplane@2x.png */; };
+		3A9198B7167FE5EC00C22920 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A3167FE05E00C22920 /* background.png */; };
+		3A9198B8167FE5F000C22920 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198B3167FE4CC00C22920 /* background@2x.png */; };
+		3A9198B9167FE5F200C22920 /* mountains.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198B1167FE42000C22920 /* mountains.png */; };
+		3A9198BA167FE5F400C22920 /* mountains@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198AF167FE3AD00C22920 /* mountains@2x.png */; };
+		3A9198BB167FE5F700C22920 /* smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A6167FE05E00C22920 /* smiley.png */; };
+		3A9198BC167FE5F900C22920 /* smiley@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A7167FE05E00C22920 /* smiley@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,8 +42,6 @@
 		3A27E967167F82F2002011F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3A27E969167F82F2002011F1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3A27E96B167F82F2002011F1 /* SpriteExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SpriteExample-Prefix.pch"; sourceTree = "<group>"; };
-		3A27E96C167F82F2002011F1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		3A27E96D167F82F2002011F1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3A27E96F167F82F2002011F1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		3A27E971167F82F2002011F1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		3A27E973167F82F2002011F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -58,20 +54,20 @@
 		3A27E981167F830B002011F1 /* GPScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GPScheduler.m; path = ../../Classes/GPScheduler.m; sourceTree = "<group>"; };
 		3A27E982167F830B002011F1 /* GPSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPSprite.h; path = ../../Classes/GPSprite.h; sourceTree = "<group>"; };
 		3A27E983167F830B002011F1 /* GPSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GPSprite.m; path = ../../Classes/GPSprite.m; sourceTree = "<group>"; };
-		3A27E988167F8357002011F1 /* SceneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneController.h; sourceTree = "<group>"; };
-		3A27E989167F8357002011F1 /* SceneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneController.m; sourceTree = "<group>"; };
 		3A27E98B167F83EB002011F1 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		3A27E98D167F83F5002011F1 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		3A27E98F167F878E002011F1 /* smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smiley.png; sourceTree = "<group>"; };
-		3A27E990167F878E002011F1 /* smiley@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smiley@2x.png"; sourceTree = "<group>"; };
-		3A27E993167FA2AD002011F1 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
-		3A27E997167FAFF4002011F1 /* mountains.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mountains.png; sourceTree = "<group>"; };
-		3A27E998167FAFF4002011F1 /* mountains@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mountains@2x.png"; sourceTree = "<group>"; };
-		3A27E9A0167FB4DE002011F1 /* mountains_square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mountains_square.png; sourceTree = "<group>"; };
-		3A27E9A1167FB4DE002011F1 /* mountains_square@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mountains_square@2x.png"; sourceTree = "<group>"; };
-		3A27E9A4167FB55F002011F1 /* background512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background512.png; sourceTree = "<group>"; };
-		3A919890167FCF2000C22920 /* airplane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airplane.png; sourceTree = "<group>"; };
-		3A919891167FCF2000C22920 /* airplane@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airplane@2x.png"; sourceTree = "<group>"; };
+		3A919899167FE00C00C22920 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = "<group>"; };
+		3A91989A167FE00C00C22920 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Source/AppDelegate.m; sourceTree = "<group>"; };
+		3A91989B167FE00C00C22920 /* SceneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneController.h; path = Source/SceneController.h; sourceTree = "<group>"; };
+		3A91989C167FE00C00C22920 /* SceneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SceneController.m; path = Source/SceneController.m; sourceTree = "<group>"; };
+		3A9198A1167FE05E00C22920 /* airplane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = airplane.png; path = Graphics/airplane.png; sourceTree = "<group>"; };
+		3A9198A2167FE05E00C22920 /* airplane@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "airplane@2x.png"; path = "Graphics/airplane@2x.png"; sourceTree = "<group>"; };
+		3A9198A3167FE05E00C22920 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = Graphics/background.png; sourceTree = "<group>"; };
+		3A9198A6167FE05E00C22920 /* smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = smiley.png; path = Graphics/smiley.png; sourceTree = "<group>"; };
+		3A9198A7167FE05E00C22920 /* smiley@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "smiley@2x.png"; path = "Graphics/smiley@2x.png"; sourceTree = "<group>"; };
+		3A9198AF167FE3AD00C22920 /* mountains@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "mountains@2x.png"; path = "Graphics/mountains@2x.png"; sourceTree = "<group>"; };
+		3A9198B1167FE42000C22920 /* mountains.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mountains.png; path = Graphics/mountains.png; sourceTree = "<group>"; };
+		3A9198B3167FE4CC00C22920 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "background@2x.png"; path = "Graphics/background@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,10 +119,8 @@
 		3A27E963167F82F2002011F1 /* SpriteExample */ = {
 			isa = PBXGroup;
 			children = (
-				3A27E96C167F82F2002011F1 /* AppDelegate.h */,
-				3A27E96D167F82F2002011F1 /* AppDelegate.m */,
-				3A27E988167F8357002011F1 /* SceneController.h */,
-				3A27E989167F8357002011F1 /* SceneController.m */,
+				3A91989F167FE04C00C22920 /* Source */,
+				3A9198A0167FE05400C22920 /* Graphics */,
 				3A27E964167F82F2002011F1 /* Supporting Files */,
 			);
 			path = SpriteExample;
@@ -135,16 +129,6 @@
 		3A27E964167F82F2002011F1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				3A919890167FCF2000C22920 /* airplane.png */,
-				3A919891167FCF2000C22920 /* airplane@2x.png */,
-				3A27E9A4167FB55F002011F1 /* background512.png */,
-				3A27E9A0167FB4DE002011F1 /* mountains_square.png */,
-				3A27E9A1167FB4DE002011F1 /* mountains_square@2x.png */,
-				3A27E997167FAFF4002011F1 /* mountains.png */,
-				3A27E998167FAFF4002011F1 /* mountains@2x.png */,
-				3A27E993167FA2AD002011F1 /* background.png */,
-				3A27E98F167F878E002011F1 /* smiley.png */,
-				3A27E990167F878E002011F1 /* smiley@2x.png */,
 				3A27E965167F82F2002011F1 /* SpriteExample-Info.plist */,
 				3A27E966167F82F2002011F1 /* InfoPlist.strings */,
 				3A27E969167F82F2002011F1 /* main.m */,
@@ -170,6 +154,32 @@
 				3A27E983167F830B002011F1 /* GPSprite.m */,
 			);
 			name = GLKitPlusPlus;
+			sourceTree = "<group>";
+		};
+		3A91989F167FE04C00C22920 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3A919899167FE00C00C22920 /* AppDelegate.h */,
+				3A91989A167FE00C00C22920 /* AppDelegate.m */,
+				3A91989B167FE00C00C22920 /* SceneController.h */,
+				3A91989C167FE00C00C22920 /* SceneController.m */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		3A9198A0167FE05400C22920 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				3A9198A1167FE05E00C22920 /* airplane.png */,
+				3A9198A2167FE05E00C22920 /* airplane@2x.png */,
+				3A9198A3167FE05E00C22920 /* background.png */,
+				3A9198B3167FE4CC00C22920 /* background@2x.png */,
+				3A9198B1167FE42000C22920 /* mountains.png */,
+				3A9198AF167FE3AD00C22920 /* mountains@2x.png */,
+				3A9198A6167FE05E00C22920 /* smiley.png */,
+				3A9198A7167FE05E00C22920 /* smiley@2x.png */,
+			);
+			name = Graphics;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,16 +237,14 @@
 				3A27E970167F82F2002011F1 /* Default.png in Resources */,
 				3A27E972167F82F2002011F1 /* Default@2x.png in Resources */,
 				3A27E974167F82F2002011F1 /* Default-568h@2x.png in Resources */,
-				3A27E991167F878E002011F1 /* smiley.png in Resources */,
-				3A27E992167F878E002011F1 /* smiley@2x.png in Resources */,
-				3A27E995167FA2AD002011F1 /* background.png in Resources */,
-				3A27E999167FAFF4002011F1 /* mountains.png in Resources */,
-				3A27E99A167FAFF4002011F1 /* mountains@2x.png in Resources */,
-				3A27E9A2167FB4DE002011F1 /* mountains_square.png in Resources */,
-				3A27E9A3167FB4DE002011F1 /* mountains_square@2x.png in Resources */,
-				3A27E9A5167FB55F002011F1 /* background512.png in Resources */,
-				3A919892167FCF2000C22920 /* airplane.png in Resources */,
-				3A919893167FCF2000C22920 /* airplane@2x.png in Resources */,
+				3A9198B5167FE5E800C22920 /* airplane.png in Resources */,
+				3A9198B6167FE5EA00C22920 /* airplane@2x.png in Resources */,
+				3A9198B7167FE5EC00C22920 /* background.png in Resources */,
+				3A9198B8167FE5F000C22920 /* background@2x.png in Resources */,
+				3A9198B9167FE5F200C22920 /* mountains.png in Resources */,
+				3A9198BA167FE5F400C22920 /* mountains@2x.png in Resources */,
+				3A9198BB167FE5F700C22920 /* smiley.png in Resources */,
+				3A9198BC167FE5F900C22920 /* smiley@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,12 +256,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A27E96A167F82F2002011F1 /* main.m in Sources */,
-				3A27E96E167F82F2002011F1 /* AppDelegate.m in Sources */,
 				3A27E984167F830B002011F1 /* GPCamera.m in Sources */,
 				3A27E985167F830B002011F1 /* GPNode.m in Sources */,
 				3A27E986167F830B002011F1 /* GPScheduler.m in Sources */,
 				3A27E987167F830B002011F1 /* GPSprite.m in Sources */,
-				3A27E98A167F8357002011F1 /* SceneController.m in Sources */,
+				3A91989D167FE00C00C22920 /* AppDelegate.m in Sources */,
+				3A91989E167FE00C00C22920 /* SceneController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
