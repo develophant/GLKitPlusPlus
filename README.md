@@ -1,4 +1,4 @@
-GLKit+
+GLKit++
 =============
 
  GLKit++ is a tiny but suprisingly powerful 3D framework built on top of GLKit.
