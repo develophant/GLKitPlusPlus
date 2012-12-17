@@ -1,0 +1,10 @@
+*xcodeproj/*mode*
+*xcodeproj/*pbxuser
+*xcodeproj/*per*
+*xcodeproj/project.xcworkspace
+*xcodeproj/xcuserdata
+*tmproj
+.DS_Store
+*.pbxuser
+*.mode1v3
+xcuserdata/
