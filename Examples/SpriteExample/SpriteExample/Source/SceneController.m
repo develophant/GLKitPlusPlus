@@ -71,10 +71,6 @@
         airplane.x = -15 * sin(f * 2 * M_PI);
     }];
     
-    [self.scene.camera animateRepeatedWithDuration:2 updates:^(float f) {
-        self.scene.camera.zoom = 1 + 0.5 - 0.5 * cos(f * 2*M_PI);
-    }];
-    
     // Setup updates
     self.preferredFramesPerSecond = 60;
     self.delegate = self;
