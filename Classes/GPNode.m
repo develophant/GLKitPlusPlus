@@ -76,7 +76,7 @@
 }
 
 + (GPNode *)node {
-    return [[[self class] alloc] init];
+    return [[self class] init];
 }
 
 - (void)dealloc {

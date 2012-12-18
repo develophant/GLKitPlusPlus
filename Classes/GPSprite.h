@@ -17,6 +17,8 @@
 @property (readwrite) CGRect frame;
 @property (readwrite) CGRect textureFrame;
 @property CGSize imageSize;
+@property BOOL wrapTextureHorizontally;
+@property BOOL wrapTextureVertically;
 
 @property (readwrite) GLKVector3 color; // multiply color
 @property float alpha;

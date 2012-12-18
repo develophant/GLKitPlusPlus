@@ -28,4 +28,12 @@
     return camera;
 }
 
+- (float)zoom {
+    return self.s;
+}
+
+- (void)setZoom:(float)zoom {
+    self.s = zoom;
+}
+
 @end

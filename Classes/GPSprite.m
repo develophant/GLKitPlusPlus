@@ -28,6 +28,8 @@ typedef struct {
 @implementation GPSprite
 
 @synthesize size = _size;
+@synthesize wrapTextureHorizontally = _wrapTextureHorizontally;
+@synthesize wrapTextureVertically = _wrapTextureVertically;
 
 static GLKBaseEffect *SHARED_EFFECT;
 
@@ -57,14 +59,6 @@ static GLKBaseEffect *SHARED_EFFECT;
         if(error) {
             NSLog(@"error while loading texture: %@", error.localizedDescription);
         }
-        else {
-            // Allow texture repeat if the texture size is a power of two
-            if(log2f(image.size.width) == roundf(log2f(image.size.width)) &&
-               log2f(image.size.height) == roundf(log2f(image.size.height))) {
-                   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-                   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-               }
-        }
         
         NSAssert(self.textureInfo, @"Error loading sprite texture info");
         
@@ -93,6 +87,40 @@ static GLKBaseEffect *SHARED_EFFECT;
     
     glDeleteBuffers(1, &_vertexBuffer);
     glDeleteVertexArraysOES(1, &_vertexArray);
+}
+
+#pragma mark - Texture wrapping
+
+- (void)setWrapTextureHorizontally:(BOOL)wrapTextureHorizontally {
+    if(log2f(self.imageSize.width) == roundf(log2f(self.imageSize.width)) &&
+       log2f(self.imageSize.height) == roundf(log2f(self.imageSize.height))) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, self.textureInfo.name);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    }
+    else {
+        NSAssert(NO, @"You can only wrap textures where width and height are powers of two");
+    }
+}
+
+- (void)setWrapTextureVertically:(BOOL)wrapTextureVertically {
+    if(log2f(self.imageSize.width) == roundf(log2f(self.imageSize.width)) &&
+       log2f(self.imageSize.height) == roundf(log2f(self.imageSize.height))) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, self.textureInfo.name);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    else {
+        NSAssert(NO, @"You can only wrap textures where width and height are powers of two");
+    }
+}
+
+- (BOOL)wrapTextureHorizontally {
+    return _wrapTextureHorizontally;
+}
+
+- (BOOL)wrapTextureVertically {
+    return _wrapTextureVertically;
 }
 
 #pragma mark - Restrictions

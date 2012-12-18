@@ -14,6 +14,7 @@
 @interface GPCamera : GPNode
 
 @property GLKMatrix4 projectionMatrix;
+@property float zoom;
 
 + (GPCamera *)cameraWithCenteredOthoProjectionForView:(UIView *)view;
 

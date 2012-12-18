@@ -33,9 +33,9 @@
     self.scene.camera = [GPCamera cameraWithCenteredOthoProjectionForView:self.view];
     self.scene.camera.s = 1;
     
-    // Create sprites
     CGSize viewSize = self.view.bounds.size;
     
+    // Create sprites
     GPSprite *background = [GPSprite spriteWithImageNamed:@"background"];
     background.size = self.view.bounds.size;
     [self.scene addChild:background];
@@ -44,6 +44,7 @@
     mountains.size = CGSizeMake(2 * viewSize.width, 190);
     mountains.position = GLKVector3Make(0.5 * viewSize.width, -viewSize.height/2 + mountains.height / 2, 0);
     mountains.textureFrame = CGRectMake(0, 0, 2 * mountains.imageSize.width, mountains.textureFrame.size.height);
+    mountains.wrapTextureHorizontally = YES;
     [self.scene addChild:mountains];
     
     GPSprite *smiley = [GPSprite spriteWithImageNamed:@"smiley"];
@@ -68,6 +69,10 @@
         airplane.y = startPos.y + 40 * sin(f * 4 * M_PI);
         airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
         airplane.x = -15 * sin(f * 2 * M_PI);
+    }];
+    
+    [self.scene.camera animateRepeatedWithDuration:2 updates:^(float f) {
+        self.scene.camera.zoom = 1 + 0.5 - 0.5 * cos(f * 2*M_PI);
     }];
     
     // Setup updates
