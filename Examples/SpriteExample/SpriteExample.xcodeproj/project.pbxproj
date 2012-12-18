@@ -144,14 +144,14 @@
 			isa = PBXGroup;
 			children = (
 				3A27E97B167F830B002011F1 /* GLKitPlusPlus.h */,
-				3A27E97C167F830B002011F1 /* GPCamera.h */,
-				3A27E97D167F830B002011F1 /* GPCamera.m */,
 				3A27E97E167F830B002011F1 /* GPNode.h */,
 				3A27E97F167F830B002011F1 /* GPNode.m */,
-				3A27E980167F830B002011F1 /* GPScheduler.h */,
-				3A27E981167F830B002011F1 /* GPScheduler.m */,
 				3A27E982167F830B002011F1 /* GPSprite.h */,
 				3A27E983167F830B002011F1 /* GPSprite.m */,
+				3A27E97C167F830B002011F1 /* GPCamera.h */,
+				3A27E97D167F830B002011F1 /* GPCamera.m */,
+				3A27E980167F830B002011F1 /* GPScheduler.h */,
+				3A27E981167F830B002011F1 /* GPScheduler.m */,
 			);
 			name = GLKitPlusPlus;
 			sourceTree = "<group>";

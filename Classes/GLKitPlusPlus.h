@@ -1,6 +1,6 @@
 //
-//  GLKitPP.h
-//  Cube Patterns 3
+//  GLKitPlusPlus.h
+//  GLKit++
 //
 //  Created by Anton Holmberg on 2012-12-17.
 //  Copyright (c) 2012 Anton Holmberg. All rights reserved.
