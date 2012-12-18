@@ -17,5 +17,5 @@
 @property float zoom;
 
 + (GPCamera *)cameraWithCenteredOthoProjectionForView:(UIView *)view;
-
+- (GLKVector3)unprojectTouch:(UITouch *)touch forNode:(GPNode *)node z:(float)z;
 @end

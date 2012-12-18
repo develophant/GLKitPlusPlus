@@ -10,7 +10,12 @@
 #import "GPCamera.h"
 #import "GPScheduler.h"
 
-#define GPNodeIndefinitely -1
+#define GPNodeRepeatForever -1
+
+#define GPNodeEasingCurveLinear ^(float f) {return f;}
+#define GPNodeEasingCurveEaseInOut ^(float f) {return 0.5f - 0.5f * cosf(M_PI * f);}
+#define GPNodeEasingCurveEaseIn ^(float f) {return f * f;}
+#define GPNodeEasingCurveEaseOut ^(float f) {return 1 - (f - 1) * (f - 1);}
 
 // GPNodeAnimator should only be used inside the GPNode class.
 // It's used for internal animation management.
@@ -239,6 +244,17 @@
     }
 }
 
+#pragma mark - Touch handling
+
+- (BOOL)isTouchingNode:(UITouch *)touch {
+    for(GPNode *node in self.children) {
+        if([node isTouchingNode:touch]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 #pragma mark - Properties copying/interpolation
 
 // Provides a constructor which doesn't do anything.
@@ -401,7 +417,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     [self animateWithDuration:duration
                   easingCurve:easingCurve ? easingCurve : [self easingCurveFromOptions:options]
                   autoReverse:options & GPAnimationAutoReverse
-                        times:(options & GPAnimationRepeat) ? GPNodeIndefinitely : 1
+                        times:(options & GPAnimationRepeat) ? GPNodeRepeatForever : 1
                    animations:animations
                    completion:completion];
 }
@@ -475,7 +491,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     [self animateWithDuration:duration
                   easingCurve:easingCurve ? easingCurve : [self easingCurveFromOptions:options]
                   autoReverse:options & GPAnimationAutoReverse
-                        times:(options & GPAnimationRepeat) ? GPNodeIndefinitely : 1
+                        times:(options & GPAnimationRepeat) ? GPNodeRepeatForever : 1
                       updates:updates
                    completion:completion];
 }
@@ -662,7 +678,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     }
     else {
         BOOL repeat = NO;
-        if(self.timesLeft != GPNodeIndefinitely) {
+        if(self.timesLeft != GPNodeRepeatForever) {
             self.timesLeft--;
             if(self.timesLeft <= 0) {
                 [self finishAnimating];

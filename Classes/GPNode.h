@@ -28,11 +28,6 @@ typedef void(^GPNodeUpdatesBlock)(float f);
 typedef void(^GPNodeCompletionBlock)();
 typedef float(^GPNodeEasingCurve)(float f);
 
-#define GPNodeEasingCurveLinear ^(float f) {return f;}
-#define GPNodeEasingCurveEaseInOut ^(float f) {return 0.5f - 0.5f * cosf(M_PI * f);}
-#define GPNodeEasingCurveEaseIn ^(float f) {return f * f;}
-#define GPNodeEasingCurveEaseOut ^(float f) {return 1 - (f - 1) * (f - 1);}
-
 @class GPCamera;
 
 @interface GPNode : NSObject {
@@ -85,6 +80,8 @@ typedef float(^GPNodeEasingCurve)(float f);
 - (BOOL)propertiesAreEqualToNode:(GPNode *)node;
 
 - (void)finishAnimation;
+
+- (BOOL)isTouchingNode:(UITouch *)touch;
 
 // Animations block based animation methods
 - (void)animateWithDuration:(NSTimeInterval)duration

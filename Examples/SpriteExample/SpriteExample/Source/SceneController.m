@@ -11,6 +11,7 @@
 @interface SceneController ()
 
 @property GPNode *scene;
+@property GPNode *touchNode;
 
 @end
 
@@ -51,6 +52,7 @@
     GPSprite *smiley = [GPSprite spriteWithImageNamed:@"smiley"];
     smiley.size = CGSizeMake(smiley.size.width * 0.5, smiley.size.height * 0.5);
     smiley.y = -viewSize.height/2 + smiley.height / 2 - 2;
+    smiley.s = 0.5;
     [self.scene addChild:smiley];
     
     GPSprite *airplane = [GPSprite spriteWithImageNamed:@"airplane"];
@@ -58,8 +60,11 @@
     [self.scene addChild:airplane];
     
     // Animate sprites
-    [smiley animateWithDuration:0.86 options:GPAnimationRepeat animations:^{
+    [smiley animateWithDuration:20 options:GPAnimationRepeat animations:^{
+        smiley.y = 70;
+        smiley.x = -70;
         smiley.rz = -2*M_PI;
+        smiley.s = 2;
     }];
     
     [mountains animateWithDuration:viewSize.width * 0.004 options:GPAnimationRepeat animations:^{
@@ -89,6 +94,8 @@
     // Setup updates
     self.preferredFramesPerSecond = 60;
     self.delegate = self;
+    
+    self.touchNode = smiley;
 }
 
 - (void)viewDidUnload {
@@ -124,6 +131,14 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
+}
+
+#pragma mark - Touch handling
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if([self.touchNode isTouchingNode:[touches anyObject]]) {
+        NSLog(@"is touching node!");
+    }
 }
 
 @end

@@ -210,6 +210,13 @@ static GLKBaseEffect *SHARED_EFFECT;
     self.alpha == sprite.alpha;
 }
 
+#pragma mark - Touch Handling
+
+- (BOOL)isTouchingNode:(UITouch *)touch {
+    GLKVector3 p = [self.camera unprojectTouch:touch forNode:self z:0];
+    return ABS(p.x) < self.width/2 && ABS(p.y) < self.height/2;
+}
+
 #pragma mark - Vertex handling
 
 - (void)createVertexArray {
