@@ -10,6 +10,7 @@
 #import "GPCamera.h"
 #import "GPScheduler.h"
 
+#define GPNodeIndefinitely -1
 
 // GPNodeAnimator should only be used inside the GPNode class.
 // It's used for internal animation management.
@@ -17,28 +18,19 @@
 
 @property (readonly) BOOL isAnimating;
 
-- (void)runWithNode:(GPNode *)node
-           duration:(NSTimeInterval)duration
-        easingCurve:(GPNodeEasingCurve)easingCurve
-        autoReverse:(BOOL)autoReverse
-              times:(NSInteger)times
-    animationsBlock:(GPNodeAnimationsBlock)animationsBlock
-    completionBlock:(GPNodeCompletionBlock)completionBlock;
-
-- (void)runWithNode:(GPNode *)node
-           duration:(NSTimeInterval)duration
-        easingCurve:(GPNodeEasingCurve)easingCurve
-        autoReverse:(BOOL)autoReverse
-              times:(NSInteger)times
-       updatesBlock:(GPNodeUpdatesBlock)updatesBlock
-    completionBlock:(GPNodeCompletionBlock)completionBlock;
+- (void)runWithDuration:(NSTimeInterval)duration
+            easingCurve:(GPNodeEasingCurve)easingCurve
+            autoReverse:(BOOL)autoReverse
+                  times:(NSInteger)times
+           updatesBlock:(GPNodeUpdatesBlock)updatesBlock
+        completionBlock:(GPNodeCompletionBlock)completionBlock;
 
 - (void)finishAnimating;
 
-- (GPNodeAnimationsBlock)divideAnimationsBlock:(GPNodeAnimationsBlock)animations
-                                      rootNode:(GPNode *)node
-                              affectedChildren:(NSMutableArray *)affectedChildren
-                                   childBlocks:(NSMutableArray *)childBlocks;
+- (GPNodeUpdatesBlock)divideAnimationsBlock:(GPNodeAnimationsBlock)animations
+                                   rootNode:(GPNode *)rootNode
+                           affectedChildren:(NSMutableArray *)affectedChildren
+                                childBlocks:(NSMutableArray *)childBlocks;
 
 @end
 
@@ -329,27 +321,27 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     self.animator = nil;
 }
 
+- (GPNodeEasingCurve)easingCurveFromOptions:(GPAnimationOptionsMask)options {
+    if(options & GPAnimationNoEase) return GPNodeEasingCurveLinear;
+    else if(options & GPAnimationEaseIn) return GPNodeEasingCurveEaseIn;
+    else if(options & GPAnimationEaseOut) return GPNodeEasingCurveEaseOut;
+    else if(options & GPAnimationEaseInOut) return GPNodeEasingCurveEaseInOut;
+    
+    if(options & GPAnimationRepeat && !(options & GPAnimationAutoReverse))
+        return GPNodeEasingCurveLinear;
+    else return GPNodeEasingCurveEaseInOut;
+}
+
 #pragma mark - Animations block based animation method
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                  animations:(GPNodeAnimationsBlock)animations
 {
     [self animateWithDuration:duration
-                  easingCurve:GPNodeEasingCurveEaseInOut
+                  easingCurve:nil
+                      options:0
                    animations:animations
                    completion:nil];
-}
-
-- (void)animateRepeatedWithDuration:(NSTimeInterval)duration
-                         animations:(GPNodeAnimationsBlock)animations
-{
-    [self animateWithDuration:duration
-                  easingCurve:GPNodeEasingCurveLinear
-                  autoReverse:NO
-                        times:GPNodeIndefinitely
-                   animations:animations
-                   completion:nil
-                  recursively:YES];
 }
 
 - (void)animateWithDuration:(NSTimeInterval)duration
@@ -357,119 +349,61 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                  completion:(GPNodeCompletionBlock)completion
 {
     [self animateWithDuration:duration
-                  easingCurve:GPNodeEasingCurveEaseInOut
+                  easingCurve:nil
+                      options:0
+                   animations:animations
+                   completion:completion];
+}
+
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                    options:(GPAnimationOptionsMask)options
+                 animations:(GPNodeAnimationsBlock)animations
+{
+    [self animateWithDuration:duration
+                  easingCurve:nil
+                      options:options
+                   animations:animations
+                   completion:nil];
+}
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                    options:(GPAnimationOptionsMask)options
+                 animations:(GPNodeAnimationsBlock)animations
+                 completion:(GPNodeCompletionBlock)completion
+{
+    [self animateWithDuration:duration
+                  easingCurve:nil
+                      options:options
                    animations:animations
                    completion:completion];
 }
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                  animations:(GPNodeAnimationsBlock)animations
 {
     [self animateWithDuration:duration
                   easingCurve:easingCurve
+                      options:options
                    animations:animations
                    completion:nil];
 }
 
+// Designated animation method
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                  animations:(GPNodeAnimationsBlock)animations
                  completion:(GPNodeCompletionBlock)completion
 {
     [self animateWithDuration:duration
-                  easingCurve:easingCurve
-                  autoReverse:NO
-                        times:1
+                  easingCurve:easingCurve ? easingCurve : [self easingCurveFromOptions:options]
+                  autoReverse:options & GPAnimationAutoReverse
+                        times:(options & GPAnimationRepeat) ? GPNodeIndefinitely : 1
                    animations:animations
-                   completion:completion
-                  recursively:YES];
-}
-
-- (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
-                autoReverse:(BOOL)autoReverse
-                      times:(NSInteger)times
-                 animations:(GPNodeAnimationsBlock)animations
-                 completion:(GPNodeCompletionBlock)completion
-{
-    [self animateWithDuration:duration
-                  easingCurve:easingCurve
-                  autoReverse:autoReverse
-                        times:times
-                   animations:animations
-                   completion:completion
-                  recursively:YES];
-}
-
-- (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
-                autoReverse:(BOOL)autoReverse
-                      times:(NSInteger)times
-                 animations:(GPNodeAnimationsBlock)animations
-                 completion:(GPNodeCompletionBlock)completionBlock
-                recursively:(BOOL)recursively {
-    
-    [self finishAnimation];
-    
-    self.animator = [[GPNodeAnimator alloc] init];
-    
-    if(recursively) {
-        NSMutableArray *affectedChildren = [NSMutableArray array];
-        NSMutableArray *childBlocks = [NSMutableArray array];
-        
-        // extract local animations, affected children and children animations block
-        // by running the animations block only once
-        // affectedChildren and childBlocks are filled by the method
-        GPNodeAnimationsBlock localBlock = [self.animator divideAnimationsBlock:animations
-                                                                       rootNode:self
-                                                               affectedChildren:affectedChildren
-                                                                    childBlocks:childBlocks];
-        
-        if(duration > 0) {
-            
-            [self.animator runWithNode:self
-                              duration:duration
-                           easingCurve:easingCurve
-                           autoReverse:autoReverse
-                                 times:times
-                       animationsBlock:localBlock
-                       completionBlock:^{
-                           [self finishChildAnimationsRecursively];
-                           if(completionBlock)
-                               completionBlock();
-                       }];
-            
-            
-            for(int i = 0; i < affectedChildren.count; i++) {
-                [[affectedChildren objectAtIndex:i] animateWithDuration:duration
-                                                            easingCurve:easingCurve
-                                                            autoReverse:autoReverse
-                                                                  times:times
-                                                             animations:[childBlocks objectAtIndex:i]
-                                                             completion:^{[self finishAnimation];}
-                                                            recursively:NO];
-            }
-        }
-        else {
-            if(!autoReverse) {
-                localBlock();
-                for(GPNodeAnimationsBlock childBlock in childBlocks) {
-                    childBlock();
-                }
-            }
-            completionBlock();
-        }
-    }
-    else {
-        [self.animator runWithNode:self
-                          duration:duration
-                       easingCurve:easingCurve
-                       autoReverse:autoReverse
-                             times:times
-                   animationsBlock:animations
-                   completionBlock:completionBlock];
-    }
+                   completion:completion];
 }
 
 #pragma mark - Updates block based animation methods
@@ -478,21 +412,10 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                     updates:(GPNodeUpdatesBlock)updates
 {
     [self animateWithDuration:duration
-                  easingCurve:GPNodeEasingCurveEaseInOut
+                  easingCurve:nil
+                      options:0
                       updates:updates
                    completion:nil];
-}
-
-- (void)animateRepeatedWithDuration:(NSTimeInterval)duration
-                            updates:(GPNodeUpdatesBlock)updates
-{
-    [self animateWithDuration:duration
-                  easingCurve:GPNodeEasingCurveLinear
-                  autoReverse:NO
-                        times:GPNodeIndefinitely
-                      updates:updates
-                   completion:nil];
-    
 }
 
 - (void)animateWithDuration:(NSTimeInterval)duration
@@ -500,33 +423,64 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                  completion:(GPNodeCompletionBlock)completion
 {
     [self animateWithDuration:duration
-                  easingCurve:GPNodeEasingCurveEaseInOut
+                  easingCurve:nil
+                      options:0
                       updates:updates
                    completion:completion];
 }
 
+
 - (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
 {
     [self animateWithDuration:duration
-                  easingCurve:easingCurve
+                  easingCurve:nil
+                      options:options
                       updates:updates
                    completion:nil];
 }
 
 - (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
                  completion:(GPNodeCompletionBlock)completion
 {
     [self animateWithDuration:duration
-                  easingCurve:easingCurve
-                  autoReverse:NO
-                        times:1
+                  easingCurve:nil
+                      options:options
                       updates:updates
                    completion:completion];
 }
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
+                    updates:(GPNodeUpdatesBlock)updates
+{
+    [self animateWithDuration:duration
+                  easingCurve:easingCurve
+                      options:options
+                      updates:updates
+                   completion:nil];
+}
+
+// Designated animation method
+- (void)animateWithDuration:(NSTimeInterval)duration
+                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
+                    updates:(GPNodeUpdatesBlock)updates
+                 completion:(GPNodeCompletionBlock)completion
+{
+    [self animateWithDuration:duration
+                  easingCurve:easingCurve ? easingCurve : [self easingCurveFromOptions:options]
+                  autoReverse:options & GPAnimationAutoReverse
+                        times:(options & GPAnimationRepeat) ? GPNodeIndefinitely : 1
+                      updates:updates
+                   completion:completion];
+}
+
+#pragma mark - Actual internal animation methods
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
@@ -539,13 +493,65 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     
     self.animator = [[GPNodeAnimator alloc] init];
     
-    [self.animator runWithNode:self
-                      duration:duration
-                   easingCurve:easingCurve
-                   autoReverse:autoReverse
-                         times:times
-                  updatesBlock:updates
-               completionBlock:completionBlock];
+    [self.animator runWithDuration:duration
+                       easingCurve:easingCurve
+                       autoReverse:autoReverse
+                             times:times
+                      updatesBlock:updates
+                   completionBlock:completionBlock];
+}
+
+// This is where the magic happens
+- (void)animateWithDuration:(NSTimeInterval)duration
+                easingCurve:(GPNodeEasingCurve)easingCurve
+                autoReverse:(BOOL)autoReverse
+                      times:(NSInteger)times
+                 animations:(GPNodeAnimationsBlock)animations
+                 completion:(GPNodeCompletionBlock)completionBlock {
+    
+    [self finishAnimation];
+    
+    self.animator = [[GPNodeAnimator alloc] init];
+    
+    NSMutableArray *affectedChildren = [NSMutableArray array];
+    NSMutableArray *childBlocks = [NSMutableArray array];
+    
+    // extract local updates, affected children and children updates block
+    // by running the animations block only once
+    // affectedChildren and childBlocks are filled by the method
+    GPNodeUpdatesBlock localBlock = [self.animator divideAnimationsBlock:animations
+                                                                rootNode:self
+                                                        affectedChildren:affectedChildren
+                                                             childBlocks:childBlocks];
+    if(duration > 0) {
+        
+        [self.animator runWithDuration:duration
+                           easingCurve:easingCurve
+                           autoReverse:autoReverse
+                                 times:times
+                          updatesBlock:localBlock
+                       completionBlock:^{
+                           [self finishChildAnimationsRecursively];
+                           if(completionBlock)
+                               completionBlock();
+                       }];
+        
+        for(int i = 0; i < affectedChildren.count; i++) {
+            [[affectedChildren objectAtIndex:i] animateWithDuration:duration
+                                                        easingCurve:easingCurve
+                                                        autoReverse:autoReverse
+                                                              times:times
+                                                            updates:[childBlocks objectAtIndex:i]
+                                                         completion:^{[self finishAnimation];}];
+        }
+    }
+    else {
+        localBlock(autoReverse ? 0 : 1);
+        for(GPNodeAnimationsBlock childBlock in childBlocks) {
+            childBlock(autoReverse ? 0 : 1);
+        }
+        completionBlock();
+    }
 }
 
 @end
@@ -555,75 +561,34 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
 
 @interface GPNodeAnimator ()
 
-@property GPNode *startNode;
-@property GPNode *endNode;
-@property GPNode *animationNode;
-@property (nonatomic, strong) GPNodeUpdatesBlock updatesBlock;
-@property (nonatomic, strong) GPNodeCompletionBlock completionBlock;
 @property NSTimeInterval duration;
 @property (nonatomic, strong) GPNodeEasingCurve easingCurve;
-@property NSDate *startDate;
 @property float normalizedLength;
 @property NSInteger timesLeft;
+@property float elapsedTime;
 
-@property int direction;
+@property (nonatomic, strong) GPNodeUpdatesBlock updatesBlock;
+@property (nonatomic, strong) GPNodeCompletionBlock completionBlock;
 
 @end
 
 @implementation GPNodeAnimator
 
-- (void)runWithNode:(GPNode *)node
-           duration:(NSTimeInterval)duration
-        easingCurve:(GPNodeEasingCurve)easingCurve
-        autoReverse:(BOOL)autoReverse
-              times:(NSInteger)times
-    animationsBlock:(GPNodeAnimationsBlock)animationsBlock
-    completionBlock:(GPNodeCompletionBlock)completionBlock {
+- (void)runWithDuration:(NSTimeInterval)duration
+            easingCurve:(GPNodeEasingCurve)easingCurve
+            autoReverse:(BOOL)autoReverse
+                  times:(NSInteger)times
+           updatesBlock:(GPNodeUpdatesBlock)updatesBlock
+        completionBlock:(GPNodeCompletionBlock)completionBlock {
     
     if(self.isAnimating) {
         [self finishAnimating];
     }
     
-    self.startNode = [node copyWithSameProperties];
-    animationsBlock();
-    self.endNode = [node copyWithSameProperties];
-    [node applyPropertiesOfNode:self.startNode];
-    
-    self.animationNode = node;
-    self.completionBlock = completionBlock;
-    self.startDate = [NSDate date];
-    self.duration = duration;
-    self.easingCurve = easingCurve;
-    self.updatesBlock = nil;
-    
-    self.normalizedLength = autoReverse ? 2 : 1;
-    self.timesLeft = times;
-    
-    if(self.duration > 0) {
-        [[GPScheduler defaultScheduler] scheduleUpdates:self];
-    }
-    else {
-        [self finishAnimating];
-    }
-}
-
-- (void)runWithNode:(GPNode *)node
-           duration:(NSTimeInterval)duration
-        easingCurve:(GPNodeEasingCurve)easingCurve
-        autoReverse:(BOOL)autoReverse
-              times:(NSInteger)times
-       updatesBlock:(GPNodeUpdatesBlock)updatesBlock
-    completionBlock:(GPNodeCompletionBlock)completionBlock {
-    
-    if(self.isAnimating) {
-        [self finishAnimating];
-    }
-    
-    self.animationNode = node;
     self.updatesBlock = updatesBlock;
     self.completionBlock = completionBlock;
     
-    self.startDate = [NSDate date];
+    self.elapsedTime = 0;
     self.duration = duration;
     self.easingCurve = easingCurve;
     
@@ -638,13 +603,13 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     }
 }
 
-// extract local animations, affected children and children animations block
+// extract local updates, affected children and children updates block
 // by running the animations block only once
 // affectedChildren and childBlocks are filled by the method
-- (GPNodeAnimationsBlock)divideAnimationsBlock:(GPNodeAnimationsBlock)animations
-                                      rootNode:(GPNode *)rootNode
-                              affectedChildren:(NSMutableArray *)affectedChildren
-                                   childBlocks:(NSMutableArray *)childBlocks
+- (GPNodeUpdatesBlock)divideAnimationsBlock:(GPNodeAnimationsBlock)animations
+                                   rootNode:(GPNode *)rootNode
+                           affectedChildren:(NSMutableArray *)affectedChildren
+                                childBlocks:(NSMutableArray *)childBlocks
 {
     NSArray *children = [rootNode childrenInTree];
     
@@ -655,7 +620,6 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     GPNode *startRootNode = [rootNode copyWithSameProperties];
     
     animations();
-    
     
     NSMutableArray *endChildren = [NSMutableArray arrayWithCapacity:children.count];
     for(GPNode *child in children)
@@ -670,35 +634,27 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
         
         [child applyPropertiesOfNode:startChild];
         
-        GPNodeAnimationsBlock animations = [self createAnimationsForNode:child
-                                                                 endNode:endChild];
-        if(animations) {
+        if(![startChild propertiesAreEqualToNode:endChild]) {
             [affectedChildren addObject:child];
-            [childBlocks addObject:animations];
+            [childBlocks addObject:[^(float f) {
+                [child lerpUnequalPropertiesFromNode:startChild toNode:endChild fraction:f];
+            } copy]];
         }
     }
     
     [rootNode applyPropertiesOfNode:startRootNode];
-    GPNodeAnimationsBlock rootAnimations = [self createAnimationsForNode:rootNode endNode:endRootNode];
     
-    if(!rootAnimations) {
-        rootAnimations = [^{ } copy];
-    }
-    
-    return rootAnimations;
-}
-
-- (GPNodeAnimationsBlock)createAnimationsForNode:(GPNode *)node
-                                         endNode:(GPNode *)endNode {
-    if ([node propertiesAreEqualToNode:endNode]) return nil;
-    return [^{ [node applyPropertiesOfNode:endNode]; } copy];
+    return [^(float f) {
+        [rootNode lerpUnequalPropertiesFromNode:startRootNode toNode:endRootNode fraction:f];
+    } copy];
 }
 
 - (BOOL)isAnimating {
-    return self.animationNode != nil;
+    return self.updatesBlock != nil;
 }
 
 - (void)update:(GLKViewController *)vc {
+    self.elapsedTime += vc.timeSinceLastUpdate;
     
     float realDuration = self.duration * self.normalizedLength;
     if(self.elapsedTime < realDuration) {
@@ -720,14 +676,10 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
         }
         
         if(repeat) {
-            self.startDate = [NSDate dateWithTimeIntervalSinceNow:realDuration - self.elapsedTime];
+            self.elapsedTime -= floorf(self.elapsedTime/realDuration) * realDuration;
             [self updateAnimation:self.elapsedTime/self.duration];
         }
     }
-}
-
-- (float)elapsedTime {
-    return -[self.startDate timeIntervalSinceNow];
 }
 
 - (void)finishAnimating {
@@ -737,15 +689,11 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
         [[GPScheduler defaultScheduler] unscheduleUpdates:self];
     
     [self updateAnimation:self.normalizedLength];
-    // A nil self.animationNode means that we are not animating
-    self.animationNode = nil;
     
     self.updatesBlock = nil;
-    self.startNode = nil;
-    self.endNode = nil;
     self.easingCurve = nil;
     self.duration = 0;
-    self.startDate = nil;
+    self.elapsedTime = 0;
     
     // Assign the completion block to a local variable in case
     // The block makes this animator animate again.
@@ -763,9 +711,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
         self.updatesBlock(localF);
     }
     else {
-        [self.animationNode lerpUnequalPropertiesFromNode:self.startNode
-                                                   toNode:self.endNode
-                                                 fraction:localF];
+        NSLog(@"Node animator is animating without an updates block!");
     }
 }
 

@@ -31,6 +31,8 @@
 		3A9198BA167FE5F400C22920 /* mountains@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198AF167FE3AD00C22920 /* mountains@2x.png */; };
 		3A9198BB167FE5F700C22920 /* smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A6167FE05E00C22920 /* smiley.png */; };
 		3A9198BC167FE5F900C22920 /* smiley@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198A7167FE05E00C22920 /* smiley@2x.png */; };
+		3A9198C81680B16000C22920 /* sun.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198C61680B16000C22920 /* sun.png */; };
+		3A9198C91680B16000C22920 /* sun@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198C71680B16000C22920 /* sun@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +70,8 @@
 		3A9198AF167FE3AD00C22920 /* mountains@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "mountains@2x.png"; path = "Graphics/mountains@2x.png"; sourceTree = "<group>"; };
 		3A9198B1167FE42000C22920 /* mountains.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mountains.png; path = Graphics/mountains.png; sourceTree = "<group>"; };
 		3A9198B3167FE4CC00C22920 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "background@2x.png"; path = "Graphics/background@2x.png"; sourceTree = "<group>"; };
+		3A9198C61680B16000C22920 /* sun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sun.png; path = Graphics/sun.png; sourceTree = "<group>"; };
+		3A9198C71680B16000C22920 /* sun@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sun@2x.png"; path = "Graphics/sun@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +174,8 @@
 		3A9198A0167FE05400C22920 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				3A9198C61680B16000C22920 /* sun.png */,
+				3A9198C71680B16000C22920 /* sun@2x.png */,
 				3A9198A1167FE05E00C22920 /* airplane.png */,
 				3A9198A2167FE05E00C22920 /* airplane@2x.png */,
 				3A9198A3167FE05E00C22920 /* background.png */,
@@ -245,6 +251,8 @@
 				3A9198BA167FE5F400C22920 /* mountains@2x.png in Resources */,
 				3A9198BB167FE5F700C22920 /* smiley.png in Resources */,
 				3A9198BC167FE5F900C22920 /* smiley@2x.png in Resources */,
+				3A9198C81680B16000C22920 /* sun.png in Resources */,
+				3A9198C91680B16000C22920 /* sun@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 
+enum GPAnimationOptions
+{
+    GPAnimationAutoReverse = 1<<0,
+    GPAnimationRepeat = 1<<1,
+    
+    GPAnimationNoEase = 1<<2,
+    GPAnimationEaseIn = 1<<3,
+    GPAnimationEaseOut = 1<<4,
+    GPAnimationEaseInOut = 1<<53
+};
+typedef enum GPAnimationOptions GPAnimationOptions;
+
+typedef NSUInteger GPAnimationOptionsMask;
+
 typedef void(^GPNodeAnimationsBlock)();
 typedef void(^GPNodeUpdatesBlock)(float f);
 typedef void(^GPNodeCompletionBlock)();
@@ -18,8 +32,6 @@ typedef float(^GPNodeEasingCurve)(float f);
 #define GPNodeEasingCurveEaseInOut ^(float f) {return 0.5f - 0.5f * cosf(M_PI * f);}
 #define GPNodeEasingCurveEaseIn ^(float f) {return f * f;}
 #define GPNodeEasingCurveEaseOut ^(float f) {return 1 - (f - 1) * (f - 1);}
-
-#define GPNodeIndefinitely -1
 
 @class GPCamera;
 
@@ -78,26 +90,27 @@ typedef float(^GPNodeEasingCurve)(float f);
 - (void)animateWithDuration:(NSTimeInterval)duration
                  animations:(GPNodeAnimationsBlock)animations;
 
-- (void)animateRepeatedWithDuration:(NSTimeInterval)duration
-                         animations:(GPNodeAnimationsBlock)animations;
-
 - (void)animateWithDuration:(NSTimeInterval)duration
                  animations:(GPNodeAnimationsBlock)animations
                  completion:(GPNodeCompletionBlock)completion;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
+                    options:(GPAnimationOptionsMask)options
+                 animations:(GPNodeAnimationsBlock)animations;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                    options:(GPAnimationOptionsMask)options
+                 animations:(GPNodeAnimationsBlock)animations
+                 completion:(GPNodeCompletionBlock)completion;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(NSUInteger)options
                  animations:(GPNodeAnimationsBlock)animations;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
-                 animations:(GPNodeAnimationsBlock)animations
-                 completion:(GPNodeCompletionBlock)completion;
-
-- (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
-                autoReverse:(BOOL)autoReverse
-                      times:(NSInteger)times
+                    options:(GPAnimationOptionsMask)options
                  animations:(GPNodeAnimationsBlock)animations
                  completion:(GPNodeCompletionBlock)completion;
 
@@ -105,26 +118,29 @@ typedef float(^GPNodeEasingCurve)(float f);
 - (void)animateWithDuration:(NSTimeInterval)duration
                     updates:(GPNodeUpdatesBlock)updates;
 
-- (void)animateRepeatedWithDuration:(NSTimeInterval)duration
-                            updates:(GPNodeUpdatesBlock)updates;
-
 - (void)animateWithDuration:(NSTimeInterval)duration
                     updates:(GPNodeUpdatesBlock)updates
                  completion:(GPNodeCompletionBlock)completion;
 
+
 - (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
                  completion:(GPNodeCompletionBlock)completion;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
-                autoReverse:(BOOL)autoReverse
-                      times:(NSInteger)times
+                    options:(GPAnimationOptionsMask)options
+                    updates:(GPNodeUpdatesBlock)updates;
+
+// Designated animation method
+- (void)animateWithDuration:(NSTimeInterval)duration
+                easingCurve:(GPNodeEasingCurve)easingCurve
+                    options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
                  completion:(GPNodeCompletionBlock)completion;
 
