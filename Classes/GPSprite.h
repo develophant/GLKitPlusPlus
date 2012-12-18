@@ -15,9 +15,11 @@
 @property (readwrite) float width;
 @property (readwrite) float height;
 @property (readwrite) CGRect frame;
-@property (readwrite) GLKVector4 color; // multiply color
 @property (readwrite) CGRect textureFrame;
 @property CGSize imageSize;
+
+@property (readwrite) GLKVector3 color; // multiply color
+@property float alpha;
 
 - (id)initWithImage:(UIImage *)image;
 + (id)spriteWithImage:(UIImage *)image;

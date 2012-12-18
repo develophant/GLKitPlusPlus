@@ -75,6 +75,10 @@
     return self;
 }
 
++ (GPNode *)node {
+    return [[[self class] alloc] init];
+}
+
 - (void)dealloc {
     [_camera removeObserver:self forKeyPath:@"modelViewMatrixIsDirty"];
 }
@@ -164,9 +168,12 @@
 
 - (GLKMatrix4)modelViewMatrix {
     if(self.modelViewMatrixIsDirty) {
+        GLKMatrix4 scaleMatrix = GLKMatrix4MakeScale(self.invertScale ? 1/self.sx : self.sx,
+                                                     self.invertScale ? 1/self.sy : self.sy,
+                                                     self.invertScale ? 1/self.sz : self.sz);
         
         GLKMatrix4 localModelViewMatrix = GLKMatrix4Multiply(GLKMatrix4MakeTranslation(self.x, self.y, self.z),
-                                                             GLKMatrix4Scale(self.rotationMatrix, self.sx, self.sy, self.sz));
+                                                             GLKMatrix4Multiply(scaleMatrix, self.rotationMatrix));
         GLKMatrix4 rawModelViewMatrix = self.parent ? GLKMatrix4Multiply(self.parent.modelViewMatrix, localModelViewMatrix) : localModelViewMatrix;
         
         if([self class] != [GPCamera class])
@@ -233,6 +240,8 @@
 }
 
 - (void)draw {
+    if(self.hidden) return;
+    
     for(GPNode *child in self.children) {
         [child draw];
     }

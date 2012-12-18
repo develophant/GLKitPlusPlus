@@ -44,14 +44,19 @@ typedef float(^GPNodeEasingCurve)(float f);
 @property float sz;
 @property float s; // Average scale
 
+@property BOOL hidden;
+
 @property (nonatomic, weak) GPNode *parent;
 @property (readonly) BOOL isAnimating;
 
 @property (nonatomic, strong) GPCamera *camera;
+
 @property BOOL invertXYRotationOrder;
+@property BOOL invertScale;
 
 @property (readonly) GLKMatrix4 modelViewMatrix;
 
++ (GPNode *)node;
 - (void)addChild:(GPNode *)node;
 - (void)removeChild:(GPNode *)node;
 - (NSArray *)childrenInTree;

@@ -10,6 +10,13 @@
 
 @implementation GPCamera
 
+- (id)init {
+    if(self = [super init]) {
+        self.invertScale = YES;
+    }
+    return self;
+}
+
 + (GPCamera *)cameraWithCenteredOthoProjectionForView:(UIView *)view {
     GPCamera *camera = [[GPCamera alloc] init];
     camera.z = 50;

@@ -31,6 +31,7 @@
     // Create the scene
     self.scene = [[GPNode alloc] init];
     self.scene.camera = [GPCamera cameraWithCenteredOthoProjectionForView:self.view];
+    self.scene.camera.s = 1;
     
     // Create sprites
     CGSize viewSize = self.view.bounds.size;
@@ -51,7 +52,7 @@
     [self.scene addChild:smiley];
     
     GPSprite *airplane = [GPSprite spriteWithImageNamed:@"airplane"];
-    airplane.position = GLKVector3Make(-15, 84, 0);
+    airplane.y = 84;
     [self.scene addChild:airplane];
     
     // Animate sprites
@@ -64,9 +65,9 @@
     
     GLKVector3 startPos = airplane.position;
     [airplane animateRepeatedWithDuration:4 updates:^(float f) {
-        airplane.y = startPos.y + 40 * sin(2*f * 2 * M_PI);
-        airplane.rz = 0.2 * sin((2*f + 0.25) * 2 * M_PI);
-        airplane.x = startPos.x + 2 * -startPos.x * (0.5 - 0.5 * sin(f * 2 * M_PI));
+        airplane.y = startPos.y + 40 * sin(f * 4 * M_PI);
+        airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
+        airplane.x = -15 * sin(f * 2 * M_PI);
     }];
     
     // Setup updates

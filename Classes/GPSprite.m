@@ -70,7 +70,8 @@ static GLKBaseEffect *SHARED_EFFECT;
         
         self.size = image.size;
         self.imageSize = image.size;
-        self.color = GLKVector4Make(1, 1, 1, 1);
+        self.color = GLKVector3Make(1, 1, 1);
+        self.alpha = 1;
         self.textureFrame = CGRectMake(0, 0, self.imageSize.width, self.imageSize.height);
         
         [self createVertexArray];
@@ -151,6 +152,8 @@ static GLKBaseEffect *SHARED_EFFECT;
     
     if([sprite isKindOfClass:[GPSprite class]]) {
         self.size = sprite.size;
+        self.color = sprite.color;
+        self.alpha = sprite.alpha;
     }
 }
 
@@ -161,13 +164,22 @@ static GLKBaseEffect *SHARED_EFFECT;
         if(!CGSizeEqualToSize(fromSprite.size, toSprite.size))
             self.size = CGSizeMake(fromSprite.size.width + f * (toSprite.size.width - fromSprite.size.width),
                                    fromSprite.size.height + f * (toSprite.size.height - fromSprite.size.height));
+        if(!GLKVector3AllEqualToVector3(fromSprite.color, toSprite.color)) {
+            self.color = GLKVector3Lerp(fromSprite.color, toSprite.color, f);
+        }
+        if(fromSprite.alpha != toSprite.alpha) {
+            self.alpha = fromSprite.alpha + f * (toSprite.alpha - fromSprite.alpha);
+        }
     }
 }
 
 - (BOOL)propertiesAreEqualToNode:(GPSprite *)sprite {
     if(![super propertiesAreEqualToNode:sprite]) return NO;
     
-    return CGSizeEqualToSize(self.size, sprite.size);
+    return
+    CGSizeEqualToSize(self.size, sprite.size) &&
+    GLKVector3AllEqualToVector3(self.color, sprite.color) &&
+    self.alpha == sprite.alpha;
 }
 
 #pragma mark - Vertex handling
@@ -226,6 +238,7 @@ static GLKBaseEffect *SHARED_EFFECT;
 #pragma mark - Draw
 
 - (void)draw {
+    if(self.hidden) return;
     
     if(self.attribsAreDirty) {
         [self updateVertexAttributes];
@@ -234,7 +247,7 @@ static GLKBaseEffect *SHARED_EFFECT;
     self.class.sharedEffect.transform.modelviewMatrix = self.modelViewMatrix;
     self.class.sharedEffect.transform.projectionMatrix = self.camera.projectionMatrix;
     self.class.sharedEffect.texture2d0.name = self.textureInfo.name;
-    self.class.sharedEffect.constantColor = self.color;
+    self.class.sharedEffect.constantColor = GLKVector4MakeWithVector3(self.color, self.alpha);
     
     [self.class.sharedEffect prepareToDraw];
     
