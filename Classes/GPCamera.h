@@ -18,4 +18,6 @@
 
 + (GPCamera *)cameraWithCenteredOthoProjectionForView:(UIView *)view;
 - (GLKVector3)unprojectUIKitPoint:(CGPoint)p forNode:(GPNode *)node z:(float)z viewSize:(CGSize)viewSize;
+- (GLKVector3)unprojectUIKitPoint:(CGPoint)p forNode:(GPNode *)node z:(float)z viewSize:(CGSize)viewSize result:(bool *)result;
+
 @end

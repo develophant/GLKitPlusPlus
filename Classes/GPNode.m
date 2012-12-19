@@ -276,20 +276,69 @@
 }
 
 - (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize {
-    if([self lineCrossesWithNearPoint:[self.camera unprojectUIKitPoint:p forNode:self z:0 viewSize:viewSize]
-                             farPoint:[self.camera unprojectUIKitPoint:p forNode:self z:1 viewSize:viewSize]])
-        return YES;
-    
-    for(GPNode *node in self.children) {
-        if([node UIKitPointIsOnTop:p viewSize:viewSize])
+    for(GPNode *child in self.children) {
+        if([child UIKitPointIsOnTop:p viewSize:viewSize])
             return YES;
     }
     return NO;
     
 }
 
-- (BOOL)lineCrossesWithNearPoint:(GLKVector3)nearPoint farPoint:(GLKVector3)farPoint {
+#pragma mark - Collision detection
+
+- (BOOL)UIKitPoint:(CGPoint)p collidesWithTriangles:(GLKVector3[])triangles
+     triangleCount:(int)triangleCount
+          viewSize:(CGSize)viewSize; {
+    
+    GLKVector3 nearPoint = [self.camera unprojectUIKitPoint:p forNode:self z:0 viewSize:viewSize];
+    GLKVector3 farPoint = [self.camera unprojectUIKitPoint:p forNode:self z:1 viewSize:viewSize];
+    GLKVector3 direction = GLKVector3Normalize(GLKVector3Subtract(farPoint, nearPoint));
+    
+    for(int i = 0; i < triangleCount; i++) {
+        
+        if([self rayWithstartPoint:nearPoint
+                         direction:direction
+              collidesWithTriangle:&triangles[3*i]])
+            return YES;
+    }
+    
     return NO;
+}
+
+// Uses the algorithm described here
+// http://gamedeveloperjourney.blogspot.se/2009/04/point-plane-collision-detection.html
+// with the modification that the plane triangle vertices doesn't have to specified in
+// a particular order.
+- (BOOL)rayWithstartPoint:(GLKVector3)startPoint
+                direction:(GLKVector3)direction
+     collidesWithTriangle:(GLKVector3 *)planeTriangle {
+    
+    GLKVector3 planeNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(planeTriangle[1], planeTriangle[0]),
+                                                                        GLKVector3Subtract(planeTriangle[2], planeTriangle[1])));
+    float d = -GLKVector3DotProduct(planeTriangle[0], planeNormal);
+    
+    float divisor = GLKVector3DotProduct(planeNormal, direction);
+    if(fabs(divisor) < 0.0000001f) {
+        // The triangle and ray are parallel
+        return NO;
+    }
+    
+    float t = - (d + GLKVector3DotProduct(planeNormal, startPoint)) / divisor;
+    
+    GLKVector3 intersection = GLKVector3Add(startPoint, GLKVector3MultiplyScalar(direction, t));
+    
+    GLKVector3 v[] =
+    {
+        GLKVector3Normalize(GLKVector3Subtract(intersection, planeTriangle[0])),
+        GLKVector3Normalize(GLKVector3Subtract(intersection, planeTriangle[1])),
+        GLKVector3Normalize(GLKVector3Subtract(intersection, planeTriangle[2]))
+    };
+    
+    // Angles around intersection should total 360 degrees (2 PI)
+    float angleSum = acosf(GLKVector3DotProduct(v[0], v[1])) + acosf(GLKVector3DotProduct(v[1], v[2])) + acosf(GLKVector3DotProduct(v[2], v[0]));
+    
+    // taking abs(angleSum) makes the order of the triangle vertices unimportant (probably)
+    return fabs(fabs(angleSum) - (2 * M_PI)) < 0.1;
 }
 
 #pragma mark - Properties copying/interpolation

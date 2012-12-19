@@ -101,14 +101,15 @@
     
     self.airplane = [GPSprite spriteWithImageNamed:@"airplane"];
     self.airplane.y = 84;
-    [self.scene insertChild:self.airplane atIndex:1];
+    [self.scene insertChild:self.airplane atIndex:2];
     
+    /*
     GLKVector3 startPos = self.airplane.position;
     [self.airplane animateWithDuration:4 options:GPAnimationRepeat updates:^(float f) {
         self.airplane.y = startPos.y + 40 * sin(f * 4 * M_PI);
         self.airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
         self.airplane.x = -15 * sin(f * 2 * M_PI);
-    }];
+    }];*/
 }
 
 #pragma mark - GLKViewDelegate

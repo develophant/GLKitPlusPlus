@@ -19,12 +19,12 @@
 
 + (GPCamera *)cameraWithCenteredOthoProjectionForView:(UIView *)view {
     GPCamera *camera = [[GPCamera alloc] init];
-    camera.z = 50;
     camera.projectionMatrix = GLKMatrix4MakeOrtho(-view.bounds.size.width/2,
                                                   view.bounds.size.width/2,
                                                   -view.bounds.size.height/2,
                                                   view.bounds.size.height/2,
-                                                  0.1, 100);
+                                                  0.1, 1000);
+    camera.z = 500;
     return camera;
 }
 
@@ -37,6 +37,10 @@
 }
 
 - (GLKVector3)unprojectUIKitPoint:(CGPoint)p forNode:(GPNode *)node z:(float)z viewSize:(CGSize)viewSize {
+    return [self unprojectUIKitPoint:p forNode:node z:z viewSize:viewSize result:nil];
+}
+
+- (GLKVector3)unprojectUIKitPoint:(CGPoint)p forNode:(GPNode *)node z:(float)z viewSize:(CGSize)viewSize result:(bool *)result {
     p.y = viewSize.height - p.y;
     
     int viewport[] = {
@@ -45,12 +49,11 @@
         (int)viewSize.width,
         (int)viewSize.height
     };
-    bool result;
     
     return GLKMathUnproject(GLKVector3Make(p.x, p.y, z),
                             node.modelViewMatrix,
                             self.projectionMatrix,
-                            &viewport[0], &result);
+                            &viewport[0], result);
 }
 
 @end

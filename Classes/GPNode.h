@@ -92,7 +92,14 @@ typedef float(^GPNodeEasingCurve)(float f);
 // Touch handling
 - (BOOL)touchIsOnTop:(UITouch *)touch;
 - (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize;
-- (BOOL)lineCrossesWithNearPoint:(GLKVector3)nearPoint farPoint:(GLKVector3)farPoint;
+- (BOOL)UIKitPoint:(CGPoint)p collidesWithTriangles:(GLKVector3[])triangles
+     triangleCount:(int)triangleCount
+          viewSize:(CGSize)viewSize;
+
+// Collision detection
+- (BOOL)rayWithstartPoint:(GLKVector3)startPoint
+                direction:(GLKVector3)direction
+     collidesWithTriangle:(GLKVector3 *)planeTriangle;
 
 // Animations block based animation methods
 - (void)animateWithDuration:(NSTimeInterval)duration
