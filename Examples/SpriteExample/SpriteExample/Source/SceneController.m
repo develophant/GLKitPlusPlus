@@ -49,18 +49,31 @@
     mountains.wrapTextureHorizontally = YES;
     [self.scene addChild:mountains];
     
+    GPSprite *trees = [GPSprite spriteWithImageNamed:@"trees"];
+    trees.wrapTextureHorizontally = YES;
+    trees.textureFrame = CGRectMake(0, 0, 4 * trees.imageSize.width, trees.imageSize.height);
+    trees.width = 4 * trees.imageSize.width;
+    trees.position = GLKVector3Make(0.5 * trees.width - viewSize.width/2, -26, 0);
+    [self.scene addChild:trees];
+    
     GPSprite *smiley = [GPSprite spriteWithImageNamed:@"smiley"];
     smiley.size = CGSizeMake(smiley.size.width * 0.5, smiley.size.height * 0.5);
-    smiley.y = -viewSize.height/2 + smiley.height / 2 - 2;
+    smiley.y = -viewSize.height/2 + smiley.height / 2 + 5;
     [self.scene addChild:smiley];
     
     // Animate sprites
-    [smiley animateWithDuration:0.84 options:GPAnimationRepeat animations:^{
+    [self createAndAnimateAirplane];
+    
+    [smiley animateWithDuration:0.8 options:GPAnimationRepeat animations:^{
         smiley.rz = -2*M_PI;
     }];
     
-    [mountains animateWithDuration:viewSize.width * 0.004 options:GPAnimationRepeat animations:^{
-        mountains.x -= viewSize.width;
+    [mountains animateWithDuration:viewSize.width * 0.01 options:GPAnimationRepeat animations:^{
+        mountains.x -= mountains.width/2;
+    }];
+    
+    [trees animateWithDuration:viewSize.width * 0.0023 options:GPAnimationRepeat animations:^{
+        trees.x -= trees.width/4;
     }];
     
     [sun animateWithDuration:10 options:GPAnimationRepeat updates:^(float f) {
@@ -70,16 +83,17 @@
         
         // p is 1 when the sun is at its highest, and goes down to -1 during the night.
         float p = sin(-(f + 0.5)*2*M_PI);
+        
         background.color = GLKVector3Make(0.6 + 0.4 * p, 0.6 + 0.4 * p, 0.6 + 0.4 * p);
-        GLKVector3 objectColor = GLKVector3Make(0.7 + 0.3 * p, 0.7 + 0.3 * p, 0.8 + 0.2 * p);
-        mountains.color = self.airplane.color = smiley.color = objectColor;
+        GLKVector3 lightColor = GLKVector3Make(0.7 + 0.3 * p, 0.7 + 0.3 * p, 0.8 + 0.2 * p);
+        self.airplane.color = mountains.color = trees.color = smiley.color = lightColor;
         sun.color = GLKVector3Make(1, 0.75 + 0.25 * p, 0.75 + 0.25 * p);
     }];
+    
     
     // Setup updates
     self.preferredFramesPerSecond = 60;
     
-    [self createAndAnimateAirplane];
 }
 
 - (void)viewDidUnload {
@@ -103,13 +117,12 @@
     self.airplane.y = 84;
     [self.scene insertChild:self.airplane atIndex:2];
     
-    /*
     GLKVector3 startPos = self.airplane.position;
     [self.airplane animateWithDuration:4 options:GPAnimationRepeat updates:^(float f) {
         self.airplane.y = startPos.y + 40 * sin(f * 4 * M_PI);
         self.airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
         self.airplane.x = -15 * sin(f * 2 * M_PI);
-    }];*/
+    }];
 }
 
 #pragma mark - GLKViewDelegate
@@ -141,12 +154,10 @@
     if([self.airplane touchIsOnTop:[touches anyObject]]) {
         self.airplane.userInteractionEnabled = NO;
         [self.airplane animateWithDuration:2 options:GPAnimationBeginFromCurrentState | GPAnimationEaseIn animations:^{
-            self.airplane.y -= 200;
-            self.airplane.x += 50;
-            self.airplane.rz = -M_PI/2 * 0.9;
+            self.airplane.y -= 220;
+            self.airplane.rz = -0.45 * M_PI;
         }completion:^(BOOL finished) {
             [self.scene removeChild:self.airplane];
-            self.airplane = nil;
             [self createAndAnimateAirplane];
         }];
     }

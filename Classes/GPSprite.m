@@ -167,7 +167,7 @@ static GLKBaseEffect *SHARED_EFFECT;
                       self.size.height);
 }
 
-#pragma mark - Animation support for size attribute
+#pragma mark - Animation support for size, color and alpha
 
 - (void)applyPropertiesOfNode:(GPSprite *)sprite {
     [super applyPropertiesOfNode:sprite];
@@ -196,9 +196,8 @@ static GLKBaseEffect *SHARED_EFFECT;
 }
 
 - (BOOL)propertiesAreEqualToNode:(GPSprite *)sprite {
-    if(![super propertiesAreEqualToNode:sprite]) return NO;
-    
     return
+    [super propertiesAreEqualToNode:sprite] &&
     CGSizeEqualToSize(self.size, sprite.size) &&
     GLKVector3AllEqualToVector3(self.color, sprite.color) &&
     self.alpha == sprite.alpha;
