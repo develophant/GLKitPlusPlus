@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "GLKitPlusPlus.h"
 
-@interface SceneController : GLKViewController <GLKViewControllerDelegate>
+@interface SceneController : GLKViewController
+
+@property (readwrite) CGSize viewSize;
 
 @end

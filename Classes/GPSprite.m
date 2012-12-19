@@ -123,12 +123,6 @@ static GLKBaseEffect *SHARED_EFFECT;
     return _wrapTextureVertically;
 }
 
-#pragma mark - Restrictions
-
-- (void)addChild:(GPNode *)node {
-    NSAssert(NO, @"Sprites are not allowed to have children");
-}
-
 #pragma mark - Properties
 
 - (void)setSize:(CGSize)size {
@@ -212,9 +206,9 @@ static GLKBaseEffect *SHARED_EFFECT;
 
 #pragma mark - Touch Handling
 
-- (BOOL)isTouchingNode:(UITouch *)touch {
-    GLKVector3 p = [self.camera unprojectTouch:touch forNode:self z:0];
-    return ABS(p.x) < self.width/2 && ABS(p.y) < self.height/2;
+// Assumes ortho-projection matrix
+- (BOOL)lineCrossesWithNearPoint:(GLKVector3)nearPoint farPoint:(GLKVector3)farPoint {
+    return ABS(nearPoint.x) < self.width/2 && ABS(nearPoint.y) < self.height/2;
 }
 
 #pragma mark - Vertex handling
@@ -273,6 +267,8 @@ static GLKBaseEffect *SHARED_EFFECT;
 #pragma mark - Draw
 
 - (void)draw {
+    [super draw];
+    
     if(self.hidden) return;
     
     if(self.attribsAreDirty) {

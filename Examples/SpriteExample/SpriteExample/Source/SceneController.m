@@ -11,7 +11,7 @@
 @interface SceneController ()
 
 @property GPNode *scene;
-@property GPNode *touchNode;
+@property (strong, nonatomic) GPSprite *airplane;
 
 @end
 
@@ -52,19 +52,11 @@
     GPSprite *smiley = [GPSprite spriteWithImageNamed:@"smiley"];
     smiley.size = CGSizeMake(smiley.size.width * 0.5, smiley.size.height * 0.5);
     smiley.y = -viewSize.height/2 + smiley.height / 2 - 2;
-    smiley.s = 0.5;
     [self.scene addChild:smiley];
     
-    GPSprite *airplane = [GPSprite spriteWithImageNamed:@"airplane"];
-    airplane.y = 84;
-    [self.scene addChild:airplane];
-    
     // Animate sprites
-    [smiley animateWithDuration:20 options:GPAnimationRepeat animations:^{
-        smiley.y = 70;
-        smiley.x = -70;
+    [smiley animateWithDuration:0.84 options:GPAnimationRepeat animations:^{
         smiley.rz = -2*M_PI;
-        smiley.s = 2;
     }];
     
     [mountains animateWithDuration:viewSize.width * 0.004 options:GPAnimationRepeat animations:^{
@@ -80,22 +72,14 @@
         float p = sin(-(f + 0.5)*2*M_PI);
         background.color = GLKVector3Make(0.6 + 0.4 * p, 0.6 + 0.4 * p, 0.6 + 0.4 * p);
         GLKVector3 objectColor = GLKVector3Make(0.7 + 0.3 * p, 0.7 + 0.3 * p, 0.8 + 0.2 * p);
-        mountains.color = airplane.color = smiley.color = objectColor;
+        mountains.color = self.airplane.color = smiley.color = objectColor;
         sun.color = GLKVector3Make(1, 0.75 + 0.25 * p, 0.75 + 0.25 * p);
-    }];
-    
-    GLKVector3 startPos = airplane.position;
-    [airplane animateWithDuration:4 options:GPAnimationRepeat updates:^(float f) {
-        airplane.y = startPos.y + 40 * sin(f * 4 * M_PI);
-        airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
-        airplane.x = -15 * sin(f * 2 * M_PI);
     }];
     
     // Setup updates
     self.preferredFramesPerSecond = 60;
-    self.delegate = self;
     
-    self.touchNode = smiley;
+    [self createAndAnimateAirplane];
 }
 
 - (void)viewDidUnload {
@@ -111,6 +95,22 @@
     [(GLKView *)self.view setContext:nil];
 }
 
+#pragma mark - Airplane animation
+
+- (void)createAndAnimateAirplane {
+    
+    self.airplane = [GPSprite spriteWithImageNamed:@"airplane"];
+    self.airplane.y = 84;
+    [self.scene insertChild:self.airplane atIndex:1];
+    
+    GLKVector3 startPos = self.airplane.position;
+    [self.airplane animateWithDuration:4 options:GPAnimationRepeat updates:^(float f) {
+        self.airplane.y = startPos.y + 40 * sin(f * 4 * M_PI);
+        self.airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
+        self.airplane.x = -15 * sin(f * 2 * M_PI);
+    }];
+}
+
 #pragma mark - GLKViewDelegate
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
@@ -121,9 +121,10 @@
     [self.scene draw];
 }
 
-#pragma mark - GLKViewControllerDelegate
 
-- (void)glkViewControllerUpdate:(GLKViewController *)controller {
+#pragma mark - Inherited update method
+
+- (void)update {
     [[GPScheduler defaultScheduler] update:self];
 }
 
@@ -136,8 +137,17 @@
 #pragma mark - Touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if([self.touchNode isTouchingNode:[touches anyObject]]) {
-        NSLog(@"is touching node!");
+    if([self.airplane touchIsOnTop:[touches anyObject]]) {
+        self.airplane.userInteractionEnabled = NO;
+        [self.airplane animateWithDuration:2 options:GPAnimationBeginFromCurrentState | GPAnimationEaseIn animations:^{
+            self.airplane.y -= 200;
+            self.airplane.x += 50;
+            self.airplane.rz = -M_PI/2 * 0.9;
+        }completion:^(BOOL finished) {
+            [self.scene removeChild:self.airplane];
+            self.airplane = nil;
+            [self createAndAnimateAirplane];
+        }];
     }
 }
 

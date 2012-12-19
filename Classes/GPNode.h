@@ -17,7 +17,8 @@ enum GPAnimationOptions
     GPAnimationNoEase = 1<<2,
     GPAnimationEaseIn = 1<<3,
     GPAnimationEaseOut = 1<<4,
-    GPAnimationEaseInOut = 1<<53
+    GPAnimationEaseInOut = 1<<5,
+    GPAnimationBeginFromCurrentState = 1<<6
 };
 typedef enum GPAnimationOptions GPAnimationOptions;
 
@@ -25,7 +26,7 @@ typedef NSUInteger GPAnimationOptionsMask;
 
 typedef void(^GPNodeAnimationsBlock)();
 typedef void(^GPNodeUpdatesBlock)(float f);
-typedef void(^GPNodeCompletionBlock)();
+typedef void(^GPNodeCompletionBlock)(BOOL finished);
 typedef float(^GPNodeEasingCurve)(float f);
 
 @class GPCamera;
@@ -60,12 +61,18 @@ typedef float(^GPNodeEasingCurve)(float f);
 
 @property BOOL invertXYRotationOrder;
 @property BOOL invertScale;
+@property BOOL userInteractionEnabled;
 
 @property (readonly) GLKMatrix4 modelViewMatrix;
 
 + (GPNode *)node;
+
 - (void)addChild:(GPNode *)node;
+- (void)insertChild:(GPNode *)node atIndex:(NSUInteger)index;
 - (void)removeChild:(GPNode *)node;
+- (void)removeChildAtIndex:(NSUInteger)index;
+- (NSUInteger)indexOfChild:(GPNode *)node;
+
 - (NSArray *)childrenInTree;
 
 - (void)storeRotation;
@@ -80,8 +87,12 @@ typedef float(^GPNodeEasingCurve)(float f);
 - (BOOL)propertiesAreEqualToNode:(GPNode *)node;
 
 - (void)finishAnimation;
+- (void)stopAnimation;
 
-- (BOOL)isTouchingNode:(UITouch *)touch;
+// Touch handling
+- (BOOL)touchIsOnTop:(UITouch *)touch;
+- (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize;
+- (BOOL)lineCrossesWithNearPoint:(GLKVector3)nearPoint farPoint:(GLKVector3)farPoint;
 
 // Animations block based animation methods
 - (void)animateWithDuration:(NSTimeInterval)duration

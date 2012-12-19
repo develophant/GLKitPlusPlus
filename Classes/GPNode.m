@@ -31,6 +31,7 @@
         completionBlock:(GPNodeCompletionBlock)completionBlock;
 
 - (void)finishAnimating;
+- (void)stopAnimating;
 
 - (GPNodeUpdatesBlock)divideAnimationsBlock:(GPNodeAnimationsBlock)animations
                                    rootNode:(GPNode *)rootNode
@@ -68,6 +69,7 @@
         self.scale = GLKVector3Make(1, 1, 1);
         self.children = [NSMutableArray array];
         self.modelViewMatrixIsDirty = YES;
+        self.userInteractionEnabled = YES;
     }
     return self;
 }
@@ -149,18 +151,6 @@
 
 - (float)s {return (self.sx + self.sy + self.sz)/3;}
 
-#pragma mark - Children Management
-
-- (void)addChild:(GPNode *)node {
-    [self.children addObject:node];
-    node.parent = self;
-}
-
-- (void)removeChild:(GPNode *)node {
-    [self.children removeObject:node];
-    node.parent = nil;
-}
-
 #pragma mark - Model View Matrix
 
 - (GLKMatrix4)modelViewMatrix {
@@ -181,6 +171,40 @@
         self.modelViewMatrixIsDirty = NO;
     }
     return _modelViewMatrix;
+}
+
+#pragma mark - Children Management
+
+- (void)addChild:(GPNode *)node {
+    [self.children addObject:node];
+    node.parent = self;
+}
+
+- (void)insertChild:(GPNode *)node atIndex:(NSUInteger)index {
+    node.parent = self;
+    [self.children insertObject:node atIndex:index];
+}
+
+- (void)removeChild:(GPNode *)node {
+    node.parent = nil;
+    [self.children removeObject:node];
+}
+
+- (void)removeChildAtIndex:(NSUInteger)index {
+    [[self.children objectAtIndex:index] setParent:nil];
+    [self.children removeObjectAtIndex:index];
+}
+
+- (NSUInteger)indexOfChild:(GPNode *)node {
+    return [self.children indexOfObject:node];
+}
+
+- (NSArray *)childrenInTree {
+    NSMutableArray *childrenInTree = [NSMutableArray array];
+    [self enumerateChildrenRecursively:^(GPNode *child) {
+        [childrenInTree addObject:child];
+    }];
+    return childrenInTree;
 }
 
 #pragma mark - Camera
@@ -246,12 +270,25 @@
 
 #pragma mark - Touch handling
 
-- (BOOL)isTouchingNode:(UITouch *)touch {
+- (BOOL)touchIsOnTop:(UITouch *)touch {
+    if(!self.userInteractionEnabled) return NO;
+    return [self UIKitPointIsOnTop:[touch locationInView:touch.view] viewSize:touch.view.bounds.size];
+}
+
+- (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize {
+    if([self lineCrossesWithNearPoint:[self.camera unprojectUIKitPoint:p forNode:self z:0 viewSize:viewSize]
+                             farPoint:[self.camera unprojectUIKitPoint:p forNode:self z:1 viewSize:viewSize]])
+        return YES;
+    
     for(GPNode *node in self.children) {
-        if([node isTouchingNode:touch]) {
+        if([node UIKitPointIsOnTop:p viewSize:viewSize])
             return YES;
-        }
     }
+    return NO;
+    
+}
+
+- (BOOL)lineCrossesWithNearPoint:(GLKVector3)nearPoint farPoint:(GLKVector3)farPoint {
     return NO;
 }
 
@@ -309,17 +346,15 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     }
 }
 
-- (NSArray *)childrenInTree {
-    NSMutableArray *childrenInTree = [NSMutableArray array];
-    [self enumerateChildrenRecursively:^(GPNode *child) {
-        [childrenInTree addObject:child];
-    }];
-    return childrenInTree;
-}
-
 - (void)finishChildAnimationsRecursively {
     [self enumerateChildrenRecursively:^(GPNode *child) {
         [child finishAnimation];
+    }];
+}
+
+- (void)stopChildAnimationsRecursively {
+    [self enumerateChildrenRecursively:^(GPNode *child) {
+        [child stopAnimation];
     }];
 }
 
@@ -332,6 +367,14 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
 - (void)finishAnimation {
     if(self.animator.isAnimating) {
         [self.animator finishAnimating];
+    }
+    
+    self.animator = nil;
+}
+
+- (void)stopAnimation {
+    if(self.animator.isAnimating) {
+        [self.animator stopAnimating];
     }
     
     self.animator = nil;
@@ -418,6 +461,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                   easingCurve:easingCurve ? easingCurve : [self easingCurveFromOptions:options]
                   autoReverse:options & GPAnimationAutoReverse
                         times:(options & GPAnimationRepeat) ? GPNodeRepeatForever : 1
+        beginFromCurrentState:options & GPAnimationBeginFromCurrentState
                    animations:animations
                    completion:completion];
 }
@@ -492,6 +536,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                   easingCurve:easingCurve ? easingCurve : [self easingCurveFromOptions:options]
                   autoReverse:options & GPAnimationAutoReverse
                         times:(options & GPAnimationRepeat) ? GPNodeRepeatForever : 1
+        beginFromCurrentState:options & GPAnimationBeginFromCurrentState
                       updates:updates
                    completion:completion];
 }
@@ -502,10 +547,12 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                 easingCurve:(GPNodeEasingCurve)easingCurve
                 autoReverse:(BOOL)autoReverse
                       times:(NSInteger)times
+      beginFromCurrentState:(BOOL)beginFromCurrentState
                     updates:(GPNodeUpdatesBlock)updates
                  completion:(GPNodeCompletionBlock)completionBlock {
     
-    [self finishAnimation];
+    if(beginFromCurrentState) [self stopAnimation];
+    else [self finishAnimation];
     
     self.animator = [[GPNodeAnimator alloc] init];
     
@@ -522,10 +569,12 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                 easingCurve:(GPNodeEasingCurve)easingCurve
                 autoReverse:(BOOL)autoReverse
                       times:(NSInteger)times
+      beginFromCurrentState:(BOOL)beginFromCurrentState
                  animations:(GPNodeAnimationsBlock)animations
                  completion:(GPNodeCompletionBlock)completionBlock {
     
-    [self finishAnimation];
+    if(beginFromCurrentState) [self stopAnimation];
+    else [self finishAnimation];
     
     self.animator = [[GPNodeAnimator alloc] init];
     
@@ -546,10 +595,11 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                            autoReverse:autoReverse
                                  times:times
                           updatesBlock:localBlock
-                       completionBlock:^{
-                           [self finishChildAnimationsRecursively];
+                       completionBlock:^(BOOL finished){
+                           if(finished) [self finishChildAnimationsRecursively];
+                           else [self stopChildAnimationsRecursively];
                            if(completionBlock)
-                               completionBlock();
+                               completionBlock(finished);
                        }];
         
         for(int i = 0; i < affectedChildren.count; i++) {
@@ -557,8 +607,12 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                                                         easingCurve:easingCurve
                                                         autoReverse:autoReverse
                                                               times:times
+                                              beginFromCurrentState:beginFromCurrentState
                                                             updates:[childBlocks objectAtIndex:i]
-                                                         completion:^{[self finishAnimation];}];
+                                                         completion:^(BOOL finished){
+                                                             if(finished) [self finishAnimation];
+                                                             else [self stopAnimation];
+                                                         }];
         }
     }
     else {
@@ -566,7 +620,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
         for(GPNodeAnimationsBlock childBlock in childBlocks) {
             childBlock(autoReverse ? 0 : 1);
         }
-        completionBlock();
+        completionBlock(YES);
     }
 }
 
@@ -698,13 +752,22 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     }
 }
 
+- (void)stopAnimating {
+    [self destroyAnimationAndFinish:NO];
+}
+
 - (void)finishAnimating {
+    [self destroyAnimationAndFinish:YES];
+}
+
+- (void)destroyAnimationAndFinish:(BOOL)finishAnimation {
     if(!self.isAnimating) return;
     
     if(self.duration > 0)
         [[GPScheduler defaultScheduler] unscheduleUpdates:self];
     
-    [self updateAnimation:self.normalizedLength];
+    if(finishAnimation)
+        [self updateAnimation:self.normalizedLength];
     
     self.updatesBlock = nil;
     self.easingCurve = nil;
@@ -717,8 +780,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
     self.completionBlock = nil;
     
     if(completionBlock)
-        completionBlock();
-    
+        completionBlock(finishAnimation);
 }
 
 - (void)updateAnimation:(float)f {

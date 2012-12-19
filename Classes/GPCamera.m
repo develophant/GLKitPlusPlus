@@ -36,32 +36,21 @@
     self.s = zoom;
 }
 
-- (GLKVector3)unprojectTouch:(UITouch *)touch forNode:(GPNode *)node z:(float)z {
-    NSAssert([touch.view isKindOfClass:[GLKView class]], @"The camera can only unproject touches in the main GLKView");
+- (GLKVector3)unprojectUIKitPoint:(CGPoint)p forNode:(GPNode *)node z:(float)z viewSize:(CGSize)viewSize {
+    p.y = viewSize.height - p.y;
     
-    CGPoint point = [touch locationInView:touch.view];
-    GLKVector3 windowCoord = GLKVector3Make(point.x,320 - point.y, z);
-    
-    //CGPoint viewOrigin = [touch.view convertPoint:CGPointZero toView:touch.view.window];
-    //NSLog(@"point: %@", NSStringFromCGPoint(point));
     int viewport[] = {
-        (int)0,
-        (int)0,
-        (int)touch.view.bounds.size.width,
-        (int)touch.view.bounds.size.height
+        0,
+        0,
+        (int)viewSize.width,
+        (int)viewSize.height
     };
     bool result;
     
-    GLKVector3 unprojected = GLKMathUnproject(windowCoord,
-                                              node.modelViewMatrix,
-                                              self.projectionMatrix,
-                                              &viewport[0], &result);
-    
-    if(!result) {
-        NSLog(@"GLKMathUnproject didn't succeed");
-    }
-    
-    return unprojected;
+    return GLKMathUnproject(GLKVector3Make(p.x, p.y, z),
+                            node.modelViewMatrix,
+                            self.projectionMatrix,
+                            &viewport[0], &result);
 }
 
 @end
