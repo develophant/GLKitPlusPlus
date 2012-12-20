@@ -30,8 +30,6 @@
     
     [(GLKView *)self.view setDrawableDepthFormat:GLKViewDrawableDepthFormat24];
     [(GLKView *)self.view setContext:[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2]];
-    
-    
     [EAGLContext setCurrentContext:[(GLKView *)self.view context]];
     
     glEnable(GL_CULL_FACE);
@@ -55,14 +53,14 @@
     CubeNode.sharedEffect.light0.position = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.camera.modelViewMatrix, nil),
                                                                       GLKVector4Make(-3, 6, 6, 1));
     
-    [self.cube animateWithDuration:8 options:GPAnimationRepeat animations:^{
+    [self.cube animateWithDuration:7.6 options:GPAnimationRepeat animations:^{
         self.cube.rx += 2 * M_PI;
         self.cube.ry += 4 * M_PI;
     }];
     
-    self.cube.position = GLKVector3Make(-0.5, -1, 0);
-    [self.cube animateWithDuration:1 options:GPAnimationRepeat | GPAnimationAutoReverse animations:^{self.cube.x += 1;}];
-    [self.cube animateWithDuration:2.3 options:GPAnimationRepeat | GPAnimationAutoReverse animations:^{self.cube.y += 2;}];
+    self.cube.position = GLKVector3Make(-0.3, -1.5, 0);
+    [self.cube animateWithDuration:1 options:GPAnimationRepeat | GPAnimationAutoReverse animations:^{self.cube.x = 0.3;}];
+    [self.cube animateWithDuration:2.3 options:GPAnimationRepeat | GPAnimationAutoReverse animations:^{self.cube.y = 1.5;}];
     [self addObserver:self forKeyPath:@"view.bounds" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:NULL];
 }
 
