@@ -61,9 +61,6 @@
     smiley.y = -viewSize.height/2 + smiley.height / 2 + 5;
     [self.scene addChild:smiley];
     
-    // Animate sprites
-    [self createAndAnimateAirplane];
-    
     [smiley animateWithDuration:0.8 options:GPAnimationRepeat animations:^{
         smiley.rz = -2*M_PI;
     }];
@@ -90,26 +87,11 @@
         sun.color = GLKVector3Make(1, 0.75 + 0.25 * p, 0.75 + 0.25 * p);
     }];
     
+    [self createAndAnimateAirplane];
     
     // Setup updates
     self.preferredFramesPerSecond = 60;
-    
 }
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    
-    // Delete the scene
-    self.scene = nil;
-    
-    // Tear down OpenGL
-    if ([EAGLContext currentContext] == [(GLKView *)self.view context]) {
-        [EAGLContext setCurrentContext:nil];
-    }
-    [(GLKView *)self.view setContext:nil];
-}
-
-#pragma mark - Airplane animation
 
 - (void)createAndAnimateAirplane {
     
@@ -123,6 +105,19 @@
         self.airplane.rz = 0.2 * sin((f + 0.125) * 4 * M_PI);
         self.airplane.x = -15 * sin(f * 2 * M_PI);
     }];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    
+    // Delete the scene
+    self.scene = nil;
+    
+    // Tear down OpenGL
+    if ([EAGLContext currentContext] == [(GLKView *)self.view context]) {
+        [EAGLContext setCurrentContext:nil];
+    }
+    [(GLKView *)self.view setContext:nil];
 }
 
 #pragma mark - GLKViewDelegate
@@ -152,12 +147,14 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if([self.airplane touchIsOnTop:[touches anyObject]]) {
+        [self.airplane stopAllAnimations];
         self.airplane.userInteractionEnabled = NO;
         [self.airplane animateWithDuration:2 options:GPAnimationBeginFromCurrentState | GPAnimationEaseIn animations:^{
             self.airplane.y -= 220;
             self.airplane.rz = -0.45 * M_PI;
         }completion:^(BOOL finished) {
             [self.scene removeChild:self.airplane];
+            self.airplane = nil;
             [self createAndAnimateAirplane];
         }];
     }

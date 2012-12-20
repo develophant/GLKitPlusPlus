@@ -1,0 +1,362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A9198DE168234D200C22920 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9198DD168234D200C22920 /* UIKit.framework */; };
+		3A9198E0168234D200C22920 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9198DF168234D200C22920 /* Foundation.framework */; };
+		3A9198E2168234D200C22920 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9198E1168234D200C22920 /* CoreGraphics.framework */; };
+		3A9198E8168234D200C22920 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198E6168234D200C22920 /* InfoPlist.strings */; };
+		3A9198EA168234D200C22920 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9198E9168234D200C22920 /* main.m */; };
+		3A9198F0168234D200C22920 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198EF168234D200C22920 /* Default.png */; };
+		3A9198F2168234D200C22920 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198F1168234D200C22920 /* Default@2x.png */; };
+		3A9198F4168234D200C22920 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A9198F3168234D200C22920 /* Default-568h@2x.png */; };
+		3A9198FC1682350D00C22920 /* SceneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9198FB1682350D00C22920 /* SceneController.m */; };
+		3A9198FF1682351400C22920 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9198FE1682351400C22920 /* AppDelegate.m */; };
+		3A91990A1682353F00C22920 /* GPCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199031682353F00C22920 /* GPCamera.m */; };
+		3A91990B1682353F00C22920 /* GPNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199051682353F00C22920 /* GPNode.m */; };
+		3A91990C1682353F00C22920 /* GPScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199071682353F00C22920 /* GPScheduler.m */; };
+		3A91990D1682353F00C22920 /* GPSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199091682353F00C22920 /* GPSprite.m */; };
+		3A91990F1682359200C22920 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A91990E1682359200C22920 /* GLKit.framework */; };
+		3A919911168235A800C22920 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A919910168235A800C22920 /* OpenGLES.framework */; };
+		3A9199191682366900C22920 /* CubeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199181682366900C22920 /* CubeNode.m */; };
+		3A91992216823DFE00C22920 /* companion_cube.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A91992016823DFE00C22920 /* companion_cube.png */; };
+		3A91992316823DFE00C22920 /* companion_cube@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A91992116823DFE00C22920 /* companion_cube@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3A9198D9168234D200C22920 /* CubeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A9198DD168234D200C22920 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		3A9198DF168234D200C22920 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		3A9198E1168234D200C22920 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3A9198E5168234D200C22920 /* CubeExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CubeExample-Info.plist"; sourceTree = "<group>"; };
+		3A9198E7168234D200C22920 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3A9198E9168234D200C22920 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3A9198EB168234D200C22920 /* CubeExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CubeExample-Prefix.pch"; sourceTree = "<group>"; };
+		3A9198EF168234D200C22920 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		3A9198F1168234D200C22920 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		3A9198F3168234D200C22920 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		3A9198FA1682350D00C22920 /* SceneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneController.h; path = Source/SceneController.h; sourceTree = "<group>"; };
+		3A9198FB1682350D00C22920 /* SceneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SceneController.m; path = Source/SceneController.m; sourceTree = "<group>"; };
+		3A9198FD1682351400C22920 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = "<group>"; };
+		3A9198FE1682351400C22920 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Source/AppDelegate.m; sourceTree = "<group>"; };
+		3A9199011682353F00C22920 /* GLKitPlusPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLKitPlusPlus.h; sourceTree = "<group>"; };
+		3A9199021682353F00C22920 /* GPCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPCamera.h; sourceTree = "<group>"; };
+		3A9199031682353F00C22920 /* GPCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPCamera.m; sourceTree = "<group>"; };
+		3A9199041682353F00C22920 /* GPNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPNode.h; sourceTree = "<group>"; };
+		3A9199051682353F00C22920 /* GPNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPNode.m; sourceTree = "<group>"; };
+		3A9199061682353F00C22920 /* GPScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPScheduler.h; sourceTree = "<group>"; };
+		3A9199071682353F00C22920 /* GPScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPScheduler.m; sourceTree = "<group>"; };
+		3A9199081682353F00C22920 /* GPSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSprite.h; sourceTree = "<group>"; };
+		3A9199091682353F00C22920 /* GPSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSprite.m; sourceTree = "<group>"; };
+		3A91990E1682359200C22920 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		3A919910168235A800C22920 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		3A9199171682366900C22920 /* CubeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CubeNode.h; path = Source/CubeNode.h; sourceTree = "<group>"; };
+		3A9199181682366900C22920 /* CubeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CubeNode.m; path = Source/CubeNode.m; sourceTree = "<group>"; };
+		3A91992016823DFE00C22920 /* companion_cube.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = companion_cube.png; path = Graphics/companion_cube.png; sourceTree = "<group>"; };
+		3A91992116823DFE00C22920 /* companion_cube@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "companion_cube@2x.png"; path = "Graphics/companion_cube@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3A9198D6168234D200C22920 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A919911168235A800C22920 /* OpenGLES.framework in Frameworks */,
+				3A91990F1682359200C22920 /* GLKit.framework in Frameworks */,
+				3A9198DE168234D200C22920 /* UIKit.framework in Frameworks */,
+				3A9198E0168234D200C22920 /* Foundation.framework in Frameworks */,
+				3A9198E2168234D200C22920 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3A9198CE168234D200C22920 = {
+			isa = PBXGroup;
+			children = (
+				3A9199001682353F00C22920 /* GLKit++ */,
+				3A9198E3168234D200C22920 /* CubeExample */,
+				3A9198DC168234D200C22920 /* Frameworks */,
+				3A9198DA168234D200C22920 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3A9198DA168234D200C22920 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A9198D9168234D200C22920 /* CubeExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A9198DC168234D200C22920 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3A919910168235A800C22920 /* OpenGLES.framework */,
+				3A91990E1682359200C22920 /* GLKit.framework */,
+				3A9198DD168234D200C22920 /* UIKit.framework */,
+				3A9198DF168234D200C22920 /* Foundation.framework */,
+				3A9198E1168234D200C22920 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3A9198E3168234D200C22920 /* CubeExample */ = {
+			isa = PBXGroup;
+			children = (
+				3A91991F16823DE400C22920 /* Source */,
+				3A91991E16823DDF00C22920 /* Graphics */,
+				3A9198E4168234D200C22920 /* Supporting Files */,
+			);
+			path = CubeExample;
+			sourceTree = "<group>";
+		};
+		3A9198E4168234D200C22920 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3A9198E5168234D200C22920 /* CubeExample-Info.plist */,
+				3A9198E6168234D200C22920 /* InfoPlist.strings */,
+				3A9198E9168234D200C22920 /* main.m */,
+				3A9198EB168234D200C22920 /* CubeExample-Prefix.pch */,
+				3A9198EF168234D200C22920 /* Default.png */,
+				3A9198F1168234D200C22920 /* Default@2x.png */,
+				3A9198F3168234D200C22920 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3A9199001682353F00C22920 /* GLKit++ */ = {
+			isa = PBXGroup;
+			children = (
+				3A9199011682353F00C22920 /* GLKitPlusPlus.h */,
+				3A9199021682353F00C22920 /* GPCamera.h */,
+				3A9199031682353F00C22920 /* GPCamera.m */,
+				3A9199041682353F00C22920 /* GPNode.h */,
+				3A9199051682353F00C22920 /* GPNode.m */,
+				3A9199061682353F00C22920 /* GPScheduler.h */,
+				3A9199071682353F00C22920 /* GPScheduler.m */,
+				3A9199081682353F00C22920 /* GPSprite.h */,
+				3A9199091682353F00C22920 /* GPSprite.m */,
+			);
+			name = "GLKit++";
+			path = ../../Classes;
+			sourceTree = "<group>";
+		};
+		3A91991E16823DDF00C22920 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				3A91992016823DFE00C22920 /* companion_cube.png */,
+				3A91992116823DFE00C22920 /* companion_cube@2x.png */,
+			);
+			name = Graphics;
+			sourceTree = "<group>";
+		};
+		3A91991F16823DE400C22920 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3A9199171682366900C22920 /* CubeNode.h */,
+				3A9199181682366900C22920 /* CubeNode.m */,
+				3A9198FD1682351400C22920 /* AppDelegate.h */,
+				3A9198FE1682351400C22920 /* AppDelegate.m */,
+				3A9198FA1682350D00C22920 /* SceneController.h */,
+				3A9198FB1682350D00C22920 /* SceneController.m */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A9198D8168234D200C22920 /* CubeExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A9198F7168234D200C22920 /* Build configuration list for PBXNativeTarget "CubeExample" */;
+			buildPhases = (
+				3A9198D5168234D200C22920 /* Sources */,
+				3A9198D6168234D200C22920 /* Frameworks */,
+				3A9198D7168234D200C22920 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CubeExample;
+			productName = CubeExample;
+			productReference = 3A9198D9168234D200C22920 /* CubeExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A9198D0168234D200C22920 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Anton Holmberg";
+			};
+			buildConfigurationList = 3A9198D3168234D200C22920 /* Build configuration list for PBXProject "CubeExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 3A9198CE168234D200C22920;
+			productRefGroup = 3A9198DA168234D200C22920 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A9198D8168234D200C22920 /* CubeExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3A9198D7168234D200C22920 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A9198E8168234D200C22920 /* InfoPlist.strings in Resources */,
+				3A9198F0168234D200C22920 /* Default.png in Resources */,
+				3A9198F2168234D200C22920 /* Default@2x.png in Resources */,
+				3A9198F4168234D200C22920 /* Default-568h@2x.png in Resources */,
+				3A91992216823DFE00C22920 /* companion_cube.png in Resources */,
+				3A91992316823DFE00C22920 /* companion_cube@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A9198D5168234D200C22920 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A9198EA168234D200C22920 /* main.m in Sources */,
+				3A9198FC1682350D00C22920 /* SceneController.m in Sources */,
+				3A9198FF1682351400C22920 /* AppDelegate.m in Sources */,
+				3A91990A1682353F00C22920 /* GPCamera.m in Sources */,
+				3A91990B1682353F00C22920 /* GPNode.m in Sources */,
+				3A91990C1682353F00C22920 /* GPScheduler.m in Sources */,
+				3A91990D1682353F00C22920 /* GPSprite.m in Sources */,
+				3A9199191682366900C22920 /* CubeNode.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3A9198E6168234D200C22920 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A9198E7168234D200C22920 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3A9198F5168234D200C22920 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3A9198F6168234D200C22920 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3A9198F8168234D200C22920 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CubeExample/CubeExample-Prefix.pch";
+				INFOPLIST_FILE = "CubeExample/CubeExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		3A9198F9168234D200C22920 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CubeExample/CubeExample-Prefix.pch";
+				INFOPLIST_FILE = "CubeExample/CubeExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A9198D3168234D200C22920 /* Build configuration list for PBXProject "CubeExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A9198F5168234D200C22920 /* Debug */,
+				3A9198F6168234D200C22920 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A9198F7168234D200C22920 /* Build configuration list for PBXNativeTarget "CubeExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A9198F8168234D200C22920 /* Debug */,
+				3A9198F9168234D200C22920 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3A9198D0168234D200C22920 /* Project object */;
+}

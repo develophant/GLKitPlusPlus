@@ -13,6 +13,7 @@ enum GPAnimationOptions
 {
     GPAnimationAutoReverse = 1<<0,
     GPAnimationRepeat = 1<<1,
+    GPAnimationBeginFrom = 1<<1,
     
     GPAnimationNoEase = 1<<2,
     GPAnimationEaseIn = 1<<3,
@@ -28,6 +29,8 @@ typedef void(^GPNodeAnimationsBlock)();
 typedef void(^GPNodeUpdatesBlock)(float f);
 typedef void(^GPNodeCompletionBlock)(BOOL finished);
 typedef float(^GPNodeEasingCurve)(float f);
+
+#define GPLERP(a, b, f) (a + f * (b - a))
 
 @class GPCamera;
 
@@ -79,16 +82,6 @@ typedef float(^GPNodeEasingCurve)(float f);
 - (void)resetStoredRotation;
 - (void)draw;
 
-- (id)initShallow;
-
-- (GPNode *)copyWithSameProperties;
-- (void)applyPropertiesOfNode:(GPNode *)node;
-- (void)lerpUnequalPropertiesFromNode:(GPNode *)fromNode toNode:(GPNode *)toNode fraction:(float)f;
-- (BOOL)propertiesAreEqualToNode:(GPNode *)node;
-
-- (void)finishAnimation;
-- (void)stopAnimation;
-
 // Touch handling
 - (BOOL)touchIsOnTop:(UITouch *)touch;
 - (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize;
@@ -101,63 +94,142 @@ typedef float(^GPNodeEasingCurve)(float f);
                 direction:(GLKVector3)direction
      collidesWithTriangle:(GLKVector3 *)planeTriangle;
 
-// Animations block based animation methods
+// Animation management
+- (void)finishAllAnimations;
+- (void)stopAllAnimations;
+- (void)stopAnimationForKey:(NSString *)animationKey;
+- (void)finishAnimationForKey:(NSString *)animationKey;
+- (BOOL)hasAnimationRunningForKey:(NSString *)animationKey;
+
+// Methods that add support for custom animations
+- (GPNode *)copyWithSameProperties;
+- (void)applyPropertiesOfNode:(GPNode *)node;
+- (void)lerpUnequalPropertiesFromNode:(GPNode *)fromNode toNode:(GPNode *)toNode fraction:(float)f;
+- (BOOL)propertiesAreEqualToNode:(GPNode *)node;
+
+// Animations block based animation methods without key
+
 - (void)animateWithDuration:(NSTimeInterval)duration
                  animations:(GPNodeAnimationsBlock)animations;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
-                 animations:(GPNodeAnimationsBlock)animations
+                           animations:(GPNodeAnimationsBlock)animations
+                           completion:(GPNodeCompletionBlock)completion;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                              options:(GPAnimationOptionsMask)options
+                           animations:(GPNodeAnimationsBlock)animations;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                              options:(GPAnimationOptionsMask)options
+                           animations:(GPNodeAnimationsBlock)animations
+                           completion:(GPNodeCompletionBlock)completion;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                          easingCurve:(GPNodeEasingCurve)easingCurve
+                              options:(NSUInteger)options
+                           animations:(GPNodeAnimationsBlock)animations;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                          easingCurve:(GPNodeEasingCurve)easingCurve
+                              options:(GPAnimationOptionsMask)options
+                           animations:(GPNodeAnimationsBlock)animations
                  completion:(GPNodeCompletionBlock)completion;
+
+// Animation block based animation methods with key
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                 animations:(GPNodeAnimationsBlock)animations
+                        key:(NSString *)animationKey;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                 animations:(GPNodeAnimationsBlock)animations
+                 completion:(GPNodeCompletionBlock)completion
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                     options:(GPAnimationOptionsMask)options
-                 animations:(GPNodeAnimationsBlock)animations;
+                 animations:(GPNodeAnimationsBlock)animations
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                     options:(GPAnimationOptionsMask)options
                  animations:(GPNodeAnimationsBlock)animations
-                 completion:(GPNodeCompletionBlock)completion;
+                 completion:(GPNodeCompletionBlock)completion
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
                     options:(NSUInteger)options
-                 animations:(GPNodeAnimationsBlock)animations;
+                 animations:(GPNodeAnimationsBlock)animations
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
                     options:(GPAnimationOptionsMask)options
                  animations:(GPNodeAnimationsBlock)animations
-                 completion:(GPNodeCompletionBlock)completion;
+                 completion:(GPNodeCompletionBlock)completion
+                        key:(NSString *)animationKey;
 
-// Updates block based animation methods
+// Updates block based animation methods without key
 - (void)animateWithDuration:(NSTimeInterval)duration
-                    updates:(GPNodeUpdatesBlock)updates;
+                              updates:(GPNodeUpdatesBlock)updates;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
+                              updates:(GPNodeUpdatesBlock)updates
+                           completion:(GPNodeCompletionBlock)completion;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                              options:(GPAnimationOptionsMask)options
+                              updates:(GPNodeUpdatesBlock)updates;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                              options:(GPAnimationOptionsMask)options
+                              updates:(GPNodeUpdatesBlock)updates
+                           completion:(GPNodeCompletionBlock)completion;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                          easingCurve:(GPNodeEasingCurve)easingCurve
+                              options:(GPAnimationOptionsMask)options
+                              updates:(GPNodeUpdatesBlock)updates;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                easingCurve:(GPNodeEasingCurve)easingCurv
+                    options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
                  completion:(GPNodeCompletionBlock)completion;
 
+// Update block based animation methods with key
+- (void)animateWithDuration:(NSTimeInterval)duration
+                    updates:(GPNodeUpdatesBlock)updates
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
-                    options:(GPAnimationOptionsMask)options
-                    updates:(GPNodeUpdatesBlock)updates;
+                    updates:(GPNodeUpdatesBlock)updates
+                 completion:(GPNodeCompletionBlock)completion
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                     options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
-                 completion:(GPNodeCompletionBlock)completion;
+                        key:(NSString *)animationKey;
+
+- (void)animateWithDuration:(NSTimeInterval)duration
+                    options:(GPAnimationOptionsMask)options
+                    updates:(GPNodeUpdatesBlock)updates
+                 completion:(GPNodeCompletionBlock)completion
+                        key:(NSString *)animationKey;
 
 - (void)animateWithDuration:(NSTimeInterval)duration
                 easingCurve:(GPNodeEasingCurve)easingCurve
                     options:(GPAnimationOptionsMask)options
-                    updates:(GPNodeUpdatesBlock)updates;
+                    updates:(GPNodeUpdatesBlock)updates
+                        key:(NSString *)animationKey;
 
-// Designated animation method
 - (void)animateWithDuration:(NSTimeInterval)duration
-                easingCurve:(GPNodeEasingCurve)easingCurve
+                easingCurve:(GPNodeEasingCurve)easingCurv
                     options:(GPAnimationOptionsMask)options
                     updates:(GPNodeUpdatesBlock)updates
-                 completion:(GPNodeCompletionBlock)completion;
-
-
+                 completion:(GPNodeCompletionBlock)completion
+                        key:(NSString *)animationKey;
 @end

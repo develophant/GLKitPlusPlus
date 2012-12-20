@@ -97,7 +97,7 @@
 		3A27E94E167F82F2002011F1 = {
 			isa = PBXGroup;
 			children = (
-				3A27E97A167F82F9002011F1 /* GLKitPlusPlus */,
+				3A27E97A167F82F9002011F1 /* GLKit++ */,
 				3A27E963167F82F2002011F1 /* SpriteExample */,
 				3A27E95C167F82F2002011F1 /* Frameworks */,
 				3A27E95A167F82F2002011F1 /* Products */,
@@ -148,7 +148,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		3A27E97A167F82F9002011F1 /* GLKitPlusPlus */ = {
+		3A27E97A167F82F9002011F1 /* GLKit++ */ = {
 			isa = PBXGroup;
 			children = (
 				3A27E97B167F830B002011F1 /* GLKitPlusPlus.h */,
@@ -161,7 +161,7 @@
 				3A27E980167F830B002011F1 /* GPScheduler.h */,
 				3A27E981167F830B002011F1 /* GPScheduler.m */,
 			);
-			name = GLKitPlusPlus;
+			name = "GLKit++";
 			sourceTree = "<group>";
 		};
 		3A91989F167FE04C00C22920 /* Source */ = {
