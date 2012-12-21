@@ -118,8 +118,10 @@
     
     self.scene.camera.rotation = GLKVector3Add(self.scene.camera.rotation, _spinSpeed);
     _spinSpeed = GLKVector3MultiplyScalar(_spinSpeed, 0.9);
-    if(GLKVector3Length(_spinSpeed) > 0)
-        self.scene.camera.rx *= 0.95;
+    if(GLKVector3Length(_spinSpeed) > 0) {
+        self.scene.camera.rx *= 0.9;
+        self.scene.camera.rz *= 0.9;
+    }
 }
 
 #pragma mark - Touch handling
@@ -139,7 +141,6 @@
                                               0.006 * (_lastDragPoints[0].x - _lastDragPoints[1].x),
                                               0);
     rotationDelta = GLKMatrix4MultiplyVector3(self.scene.camera.storedRotationMatrix, rotationDelta);
-    rotationDelta.z = 0;
     self.scene.camera.rotation = GLKVector3Add(self.scene.camera.rotation, rotationDelta);
 }
 
@@ -148,7 +149,6 @@
                                               0.006 * (_lastDragPoints[0].x - _lastDragPoints[1].x),
                                               0);
     newSpinSpeed = GLKMatrix4MultiplyVector3(self.scene.camera.storedRotationMatrix, newSpinSpeed);
-    newSpinSpeed.z = 0;
     _spinSpeed = newSpinSpeed;
     
 }
