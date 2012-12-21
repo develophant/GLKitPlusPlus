@@ -34,6 +34,7 @@
     
     CGSize viewSize = self.view.bounds.size;
     
+    glEnable(GL_CULL_FACE);
     // Create sprites
     GPSprite *background = [GPSprite spriteWithImageNamed:@"background"];
     background.size = self.view.bounds.size;

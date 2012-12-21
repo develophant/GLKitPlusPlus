@@ -53,7 +53,7 @@ static GLKBaseEffect *SHARED_EFFECT;
         
         self.attribsAreDirty = YES;
         
-        NSDictionary * options = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
+        NSDictionary * options = @{GLKTextureLoaderOriginBottomLeft: @YES};
         NSError * error;
         self.textureInfo = [GLKTextureLoader textureWithCGImage:image.CGImage options:options error:&error];
         if(error) {

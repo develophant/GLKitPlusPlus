@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A5DA8C91683E9E600962A9F /* CubeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5DA8C81683E9E600962A9F /* CubeNode.m */; };
 		3A9198DE168234D200C22920 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9198DD168234D200C22920 /* UIKit.framework */; };
 		3A9198E0168234D200C22920 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9198DF168234D200C22920 /* Foundation.framework */; };
 		3A9198E2168234D200C22920 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A9198E1168234D200C22920 /* CoreGraphics.framework */; };
@@ -23,12 +24,13 @@
 		3A91990D1682353F00C22920 /* GPSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199091682353F00C22920 /* GPSprite.m */; };
 		3A91990F1682359200C22920 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A91990E1682359200C22920 /* GLKit.framework */; };
 		3A919911168235A800C22920 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A919910168235A800C22920 /* OpenGLES.framework */; };
-		3A9199191682366900C22920 /* CubeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9199181682366900C22920 /* CubeNode.m */; };
 		3A91992216823DFE00C22920 /* companion_cube.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A91992016823DFE00C22920 /* companion_cube.png */; };
 		3A91992316823DFE00C22920 /* companion_cube@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A91992116823DFE00C22920 /* companion_cube@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A5DA8C71683E9E600962A9F /* CubeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CubeNode.h; path = "../Shared Content/Classes/CubeNode.h"; sourceTree = "<group>"; };
+		3A5DA8C81683E9E600962A9F /* CubeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CubeNode.m; path = "../Shared Content/Classes/CubeNode.m"; sourceTree = "<group>"; };
 		3A9198D9168234D200C22920 /* CubeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9198DD168234D200C22920 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3A9198DF168234D200C22920 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -55,8 +57,6 @@
 		3A9199091682353F00C22920 /* GPSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSprite.m; sourceTree = "<group>"; };
 		3A91990E1682359200C22920 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		3A919910168235A800C22920 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		3A9199171682366900C22920 /* CubeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CubeNode.h; path = Source/CubeNode.h; sourceTree = "<group>"; };
-		3A9199181682366900C22920 /* CubeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CubeNode.m; path = Source/CubeNode.m; sourceTree = "<group>"; };
 		3A91992016823DFE00C22920 /* companion_cube.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = companion_cube.png; path = Graphics/companion_cube.png; sourceTree = "<group>"; };
 		3A91992116823DFE00C22920 /* companion_cube@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "companion_cube@2x.png"; path = "Graphics/companion_cube@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,10 +77,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A5DA8C51683E9D500962A9F /* Shared Example Content */ = {
+			isa = PBXGroup;
+			children = (
+				3A5DA8C61683E9DF00962A9F /* Source */,
+			);
+			name = "Shared Example Content";
+			sourceTree = "<group>";
+		};
+		3A5DA8C61683E9DF00962A9F /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3A5DA8C71683E9E600962A9F /* CubeNode.h */,
+				3A5DA8C81683E9E600962A9F /* CubeNode.m */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
 		3A9198CE168234D200C22920 = {
 			isa = PBXGroup;
 			children = (
 				3A9199001682353F00C22920 /* GLKit++ */,
+				3A5DA8C51683E9D500962A9F /* Shared Example Content */,
 				3A9198E3168234D200C22920 /* CubeExample */,
 				3A9198DC168234D200C22920 /* Frameworks */,
 				3A9198DA168234D200C22920 /* Products */,
@@ -160,8 +178,6 @@
 		3A91991F16823DE400C22920 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3A9199171682366900C22920 /* CubeNode.h */,
-				3A9199181682366900C22920 /* CubeNode.m */,
 				3A9198FD1682351400C22920 /* AppDelegate.h */,
 				3A9198FE1682351400C22920 /* AppDelegate.m */,
 				3A9198FA1682350D00C22920 /* SceneController.h */,
@@ -244,7 +260,7 @@
 				3A91990B1682353F00C22920 /* GPNode.m in Sources */,
 				3A91990C1682353F00C22920 /* GPScheduler.m in Sources */,
 				3A91990D1682353F00C22920 /* GPSprite.m in Sources */,
-				3A9199191682366900C22920 /* CubeNode.m in Sources */,
+				3A5DA8C91683E9E600962A9F /* CubeNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +371,7 @@
 				3A9198F9168234D200C22920 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

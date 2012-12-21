@@ -23,7 +23,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
     self.preferredFramesPerSecond = 60;
     
     self.view = [[GLKView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -46,12 +45,13 @@
     CubeNode.sharedEffect.light0.diffuseColor = GLKVector4Make(1, 1, 1, 1);
     CubeNode.sharedEffect.light0.ambientColor = GLKVector4Make(0.7, 0.7, 0.7, 1);
     
-    // Mutliply the light position with the invert of the camera's model view matrix
+    // Multiply the light position with the invert of the camera's model view matrix
     // because it allows you to specifiy the position in the scenes coordinate system.
     // This is also what each nodes in the scene does to its coordinates before rendering
     // (it's included in the model view matrix of the node).
     CubeNode.sharedEffect.light0.position = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.camera.modelViewMatrix, nil),
                                                                       GLKVector4Make(-3, 6, 6, 1));
+    
     
     [self.cube animateWithDuration:7.6 options:GPAnimationRepeat animations:^{
         self.cube.rx += 2 * M_PI;

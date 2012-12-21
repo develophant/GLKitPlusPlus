@@ -68,6 +68,8 @@ typedef float(^GPNodeEasingCurve)(float f);
 
 @property (readonly) GLKMatrix4 modelViewMatrix;
 
+@property (readwrite) GLKMatrix4 storedRotationMatrix;
+
 + (GPNode *)node;
 
 - (void)addChild:(GPNode *)node;
@@ -76,10 +78,13 @@ typedef float(^GPNodeEasingCurve)(float f);
 - (void)removeChildAtIndex:(NSUInteger)index;
 - (NSUInteger)indexOfChild:(GPNode *)node;
 
-- (NSArray *)childrenInTree;
+// Store
+- (void)storeCurrentRotation;
+- (void)storeScale;
 
-- (void)storeRotation;
 - (void)resetStoredRotation;
+- (void)resetStoredScale;
+
 - (void)draw;
 
 // Touch handling

@@ -106,11 +106,11 @@ static GLuint SHARED_INDEX_BUFFER;
         
         glGenBuffers(1, &SHARED_VERTEX_BUFFER);
         glBindBuffer(GL_ARRAY_BUFFER, SHARED_VERTEX_BUFFER);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(VertexAttribs), Vertices, GL_STATIC_DRAW);
         
         glGenBuffers(1, &SHARED_INDEX_BUFFER);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, SHARED_INDEX_BUFFER);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GLubyte), Indices, GL_STATIC_DRAW);
         
         glEnableVertexAttribArray(GLKVertexAttribPosition);
         glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribs), (const GLvoid *) offsetof(VertexAttribs, Position));
@@ -127,11 +127,12 @@ static GLuint SHARED_INDEX_BUFFER;
 }
 
 + (void)destroySharedVertexArray {
-    
-    glDeleteBuffers(1, &SHARED_VERTEX_BUFFER);
-    glDeleteBuffers(1, &SHARED_INDEX_BUFFER);
-    glDeleteVertexArraysOES(1, &SHARED_VERTEX_ARRAY);
-    SHARED_VERTEX_ARRAY_IS_CREATED = NO;
+    if(SHARED_VERTEX_ARRAY_IS_CREATED) {
+        glDeleteBuffers(1, &SHARED_VERTEX_BUFFER);
+        glDeleteBuffers(1, &SHARED_INDEX_BUFFER);
+        glDeleteVertexArraysOES(1, &SHARED_VERTEX_ARRAY);
+        SHARED_VERTEX_ARRAY_IS_CREATED = NO;
+    }
 }
 
 #pragma mark - Initialization
@@ -139,13 +140,15 @@ static GLuint SHARED_INDEX_BUFFER;
 - (id)initWithTextureNamed:(NSString *)textureName {
     if(self = [super init]) {
         
-        NSDictionary * options = @{GLKTextureLoaderOriginBottomLeft: [NSNumber numberWithBool:YES]};
+        NSDictionary * options = @{GLKTextureLoaderOriginBottomLeft: @YES};
         NSError * error;
         self.textureInfo = [GLKTextureLoader textureWithCGImage:[UIImage imageNamed:textureName].CGImage options:options error:&error];
         if(error) {
             NSLog(@"error while loading texture: %@", error.localizedDescription);
         }
+        
         NSAssert(self.textureInfo, @"Error loading sprite texture info");
+        
     }
     return self;
 }
@@ -162,7 +165,7 @@ static GLuint SHARED_INDEX_BUFFER;
     [self.class.sharedEffect prepareToDraw];
     
     glBindVertexArrayOES(self.class.sharedVertexArray);
-    glDrawElements(GL_TRIANGLES, sizeof(Indices)/sizeof(Indices[0]), GL_UNSIGNED_BYTE, 0);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, 0);
     glBindVertexArrayOES(0);
 }
 
@@ -171,7 +174,7 @@ static GLuint SHARED_INDEX_BUFFER;
 - (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize {
     if([super UIKitPointIsOnTop:p viewSize:viewSize]) return YES;
     
-    int indicesCount = sizeof(Indices)/sizeof(Indices[0]);
+    int indicesCount = 36;
     GLKVector3 triangles[indicesCount];
     for(int i = 0; i < indicesCount; i++) {
         triangles[i] = Vertices[Indices[i]].Position;

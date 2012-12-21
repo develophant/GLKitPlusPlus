@@ -44,13 +44,17 @@
 
 @interface GPNode ()
 
-@property GLKMatrix4 storedRotationMatrix;
-@property (readonly) GLKMatrix4 rawRotationMatrix;
 @property (readonly) GLKMatrix4 rotationMatrix;
 @property (nonatomic, strong) NSMutableArray *children;
 @property BOOL modelViewMatrixIsDirty;
 @property (nonatomic, strong) NSMutableDictionary *namedAnimators;
 @property (nonatomic, strong) NSMutableArray *anonymousAnimators;
+
+@property GLKMatrix4 storedScaleMatrix;
+@property GLKMatrix4 storedTranslationMatrix;
+@property BOOL hasStoredRotation;
+@property BOOL hasStoredScale;
+@property BOOL hasStoredTranslation;
 
 @end
 
@@ -62,12 +66,15 @@
 @synthesize modelViewMatrix = _modelViewMatrix;
 @synthesize modelViewMatrixIsDirty = _modelViewMatrixIsDirty;
 @synthesize camera = _camera;
+@synthesize storedRotationMatrix = _storedRotationMatrix;
 
 - (id)init {
     if(self = [super init]) {
         self.position = GLKVector3Make(0, 0, 0);
         self.rotation = GLKVector3Make(0, 0, 0);
         self.storedRotationMatrix = GLKMatrix4Identity;
+        self.storedScaleMatrix = GLKMatrix4Identity;
+        self.storedTranslationMatrix = GLKMatrix4Identity;
         self.scale = GLKVector3Make(1, 1, 1);
         self.children = [NSMutableArray array];
         self.modelViewMatrixIsDirty = YES;
@@ -160,12 +167,9 @@
 
 - (GLKMatrix4)modelViewMatrix {
     if(self.modelViewMatrixIsDirty) {
-        GLKMatrix4 scaleMatrix = GLKMatrix4MakeScale(self.invertScale ? 1/self.sx : self.sx,
-                                                     self.invertScale ? 1/self.sy : self.sy,
-                                                     self.invertScale ? 1/self.sz : self.sz);
         
         GLKMatrix4 localModelViewMatrix = GLKMatrix4Multiply(GLKMatrix4MakeTranslation(self.x, self.y, self.z),
-                                                             GLKMatrix4Multiply(scaleMatrix, self.rotationMatrix));
+                                                             GLKMatrix4Multiply(self.scaleMatrix, self.rotationMatrix));
         GLKMatrix4 rawModelViewMatrix = self.parent ? GLKMatrix4Multiply(self.parent.modelViewMatrix, localModelViewMatrix) : localModelViewMatrix;
         
         if([self class] != [GPCamera class])
@@ -233,7 +237,7 @@
     }
 }
 
-#pragma mark - Rotation matrices
+#pragma mark - Stored transformations
 
 - (GLKMatrix4)rawRotationMatrix {
     GLKMatrix4 rotationMatrix = GLKMatrix4Identity;
@@ -252,17 +256,54 @@
 }
 
 - (GLKMatrix4)rotationMatrix {
-    return GLKMatrix4Multiply(self.rawRotationMatrix, self.storedRotationMatrix);
+    if(self.hasStoredRotation)
+        return GLKMatrix4Multiply(self.rawRotationMatrix, self.storedRotationMatrix);
+    else return self.rawRotationMatrix;
 }
 
-- (void)storeRotation {
+- (GLKMatrix4)rawScaleMatrix {
+    return GLKMatrix4MakeScale(self.invertScale ? 1/self.sx : self.sx,
+                               self.invertScale ? 1/self.sy : self.sy,
+                               self.invertScale ? 1/self.sz : self.sz);
+}
+
+- (GLKMatrix4)scaleMatrix {
+    if(self.hasStoredScale)
+        return GLKMatrix4Multiply(self.rawScaleMatrix, self.storedScaleMatrix);
+    else return self.rawScaleMatrix;
+}
+
+- (void)storeCurrentRotation {
     self.storedRotationMatrix = GLKMatrix4Multiply(self.rawRotationMatrix, self.storedRotationMatrix);
     self.rotation = GLKVector3Make(0, 0, 0);
+    self.hasStoredRotation = YES;
+}
+
+- (void)setStoredRotationMatrix:(GLKMatrix4)rotationMatrix {
+    _storedRotationMatrix = rotationMatrix;
+    self.hasStoredRotation = YES;
+}
+
+- (GLKMatrix4)storedRotationMatrix {
+    return _storedRotationMatrix;
+}
+
+- (void)storeScale {
+    self.storedScaleMatrix = GLKMatrix4Multiply(self.rawScaleMatrix, self.storedScaleMatrix);
+    self.scale = GLKVector3Make(1, 1, 1);
+    self.hasStoredScale = YES;
 }
 
 - (void)resetStoredRotation {
     self.storedRotationMatrix = GLKMatrix4Identity;
     self.modelViewMatrixIsDirty = YES;
+    self.hasStoredRotation = NO;
+}
+
+- (void)resetStoredScale {
+    self.storedScaleMatrix = GLKMatrix4Identity;
+    self.modelViewMatrixIsDirty = YES;
+    self.hasStoredScale = NO;
 }
 
 - (void)draw {
