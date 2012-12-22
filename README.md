@@ -12,4 +12,4 @@ The goal of GLKit++ is to give you functionality that most 3D applications today
 
 Getting started
 =============
-The easiest way to get started is to look at the examples included in the repository. These show how you accomplish common tasks like animating a 2D scene, creating custom 3D objects and how to create an augmented reality app.
+The easiest way to get started is to look at the examples included in the repository. These show how you can accomplish common tasks like animating a 2D scene, creating custom 3D objects, touch detection and how to create an augmented reality app.
