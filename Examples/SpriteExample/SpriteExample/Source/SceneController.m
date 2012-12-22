@@ -147,7 +147,8 @@
 #pragma mark - Touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if([self.airplane touchIsOnTop:[touches anyObject]]) {
+    CGPoint p = [[touches anyObject] locationInView:self.view];
+    if([self.airplane touchedNodeOfUIKitPoint:p viewSize:self.view.bounds.size]) {
         [self.airplane stopAllAnimations];
         self.airplane.userInteractionEnabled = NO;
         [self.airplane animateWithDuration:2 options:GPAnimationBeginFromCurrentState | GPAnimationEaseIn animations:^{

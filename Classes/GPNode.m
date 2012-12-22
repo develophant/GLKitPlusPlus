@@ -9,6 +9,7 @@
 #import "GPNode.h"
 #import "GPCamera.h"
 #import "GPScheduler.h"
+#import <float.h>
 
 #define GPNodeRepeatForever -1
 
@@ -161,6 +162,13 @@
     self.modelViewMatrixIsDirty = YES;
 }
 
+- (GLKVector3)globalScale {
+    if(self.parent) {
+        return GLKVector3Multiply(self.scale, self.parent.globalScale);
+    }
+    else return self.scale;
+}
+
 - (float)s {return (self.sx + self.sy + self.sz)/3;}
 
 #pragma mark - Model View Matrix
@@ -216,6 +224,12 @@
     return childrenInTree;
 }
 
+- (GLKVector3)convertPoint:(GLKVector3)p fromNode:(GPNode *)node {
+    GLKVector4 worldPoint = GLKMatrix4MultiplyVector4(node.modelViewMatrix, GLKVector4MakeWithVector3(p, 1));
+    GLKVector4 localPoint = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.modelViewMatrix, nil), worldPoint);
+    return GLKVector3Make(localPoint.x, localPoint.y, localPoint.z);
+}
+
 #pragma mark - Camera
 
 - (GPCamera *)camera {
@@ -255,6 +269,14 @@
     return rotationMatrix;
 }
 
+- (GLKMatrix4)translationMatrix {
+    
+    GLKMatrix4 tm = GLKMatrix4MakeTranslation(self.x, self.y, self.z);
+    NSLog(@"return translation matrix: %@", NSStringFromGLKMatrix4(tm));
+    
+    return tm;
+}
+
 - (GLKMatrix4)rotationMatrix {
     if(self.hasStoredRotation)
         return GLKMatrix4Multiply(self.rawRotationMatrix, self.storedRotationMatrix);
@@ -282,29 +304,30 @@
 - (void)setStoredRotationMatrix:(GLKMatrix4)rotationMatrix {
     _storedRotationMatrix = rotationMatrix;
     self.hasStoredRotation = YES;
+    self.modelViewMatrixIsDirty = YES;
 }
 
 - (GLKMatrix4)storedRotationMatrix {
     return _storedRotationMatrix;
 }
-
+/*
 - (void)storeScale {
     self.storedScaleMatrix = GLKMatrix4Multiply(self.rawScaleMatrix, self.storedScaleMatrix);
     self.scale = GLKVector3Make(1, 1, 1);
     self.hasStoredScale = YES;
-}
+}*/
 
 - (void)resetStoredRotation {
     self.storedRotationMatrix = GLKMatrix4Identity;
     self.modelViewMatrixIsDirty = YES;
     self.hasStoredRotation = NO;
 }
-
+/*
 - (void)resetStoredScale {
     self.storedScaleMatrix = GLKMatrix4Identity;
     self.modelViewMatrixIsDirty = YES;
     self.hasStoredScale = NO;
-}
+}*/
 
 - (void)draw {
     if(self.hidden) return;
@@ -314,77 +337,114 @@
     }
 }
 
-#pragma mark - Touch handling
+#pragma mark - Triangles
 
-- (BOOL)touchIsOnTop:(UITouch *)touch {
-    if(!self.userInteractionEnabled) return NO;
-    return [self UIKitPointIsOnTop:[touch locationInView:touch.view] viewSize:touch.view.bounds.size];
+- (void)fillTriangles:(GLKVector3 *)triangles {
+    // Should be overriden by subclasses
 }
 
-- (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize {
-    for(GPNode *child in self.children) {
-        if([child UIKitPointIsOnTop:p viewSize:viewSize])
-            return YES;
-    }
-    return NO;
-    
+- (int)triangleCount {
+    // Should be overriden by subclasses
+    return 0;
 }
 
 #pragma mark - Collision detection
 
-- (BOOL)UIKitPoint:(CGPoint)p collidesWithTriangles:(GLKVector3[])triangles
-     triangleCount:(int)triangleCount
-          viewSize:(CGSize)viewSize; {
+
+- (GPNode *)touchedNodeOfUIKitPoint:(CGPoint)p viewSize:(CGSize)viewSize {
+    
+    GPNode *closestNode = nil;
+    float minDistance = FLT_MAX;
+    
+    for(GPNode *node in [[self childrenInTree] arrayByAddingObject:self]) {
+        int triangleCount = node.triangleCount;
+        GLKVector3 triangles[3 * triangleCount];
+        [node fillTriangles:triangles];
+        
+        GLKVector3 globalScale = node.globalScale;
+        for(int i = 0; i < 3 * triangleCount; i++)
+            triangles[i] = GLKVector3Multiply(triangles[i], globalScale);
+        
+        GLKVector3 nearPoint = [node.camera unprojectUIKitPoint:p forNode:node z:0 viewSize:viewSize];
+        nearPoint = GLKVector3Multiply(nearPoint, globalScale);
+        GLKVector3 farPoint = [node.camera unprojectUIKitPoint:p forNode:node z:1 viewSize:viewSize];
+        farPoint = GLKVector3Multiply(farPoint, globalScale);
+        GLKVector3 direction = GLKVector3Normalize(GLKVector3Subtract(farPoint, nearPoint));
+        
+        
+        GLKVector3 intersection = firstIntersectionOfRayWithTriangles(nearPoint, direction, triangles, triangleCount);
+        
+        if(!GLKVector3AllEqualToScalar(intersection, 0)) {
+            float distance = GLKVector3Distance(nearPoint, intersection);
+            if(distance < minDistance) {
+                minDistance = distance;
+                closestNode = node;
+            }
+        }
+    }
+    return closestNode.userInteractionEnabled ? closestNode : nil;
+}
+
+- (GLKVector3)closestIntersectionOfUIKitPoint:(CGPoint)p
+                                     viewSize:(CGSize)viewSize {
     
     GLKVector3 nearPoint = [self.camera unprojectUIKitPoint:p forNode:self z:0 viewSize:viewSize];
     GLKVector3 farPoint = [self.camera unprojectUIKitPoint:p forNode:self z:1 viewSize:viewSize];
     GLKVector3 direction = GLKVector3Normalize(GLKVector3Subtract(farPoint, nearPoint));
     
-    for(int i = 0; i < triangleCount; i++) {
-        
-        if([self rayWithstartPoint:nearPoint
-                         direction:direction
-              collidesWithTriangle:&triangles[3*i]])
-            return YES;
-    }
+    int triangleCount = self.triangleCount;
+    GLKVector3 triangles[3 * triangleCount];
+    [self fillTriangles:triangles];
+    return firstIntersectionOfRayWithTriangles(nearPoint, direction, triangles, triangleCount);
     
-    return NO;
 }
 
 // Uses the algorithm described here
 // http://gamedeveloperjourney.blogspot.se/2009/04/point-plane-collision-detection.html
-// with the modification that the plane triangle vertices doesn't have to specified in
-// a particular order.
-- (BOOL)rayWithstartPoint:(GLKVector3)startPoint
-                direction:(GLKVector3)direction
-     collidesWithTriangle:(GLKVector3 *)planeTriangle {
-    
-    GLKVector3 planeNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(planeTriangle[1], planeTriangle[0]),
-                                                                        GLKVector3Subtract(planeTriangle[2], planeTriangle[1])));
-    float d = -GLKVector3DotProduct(planeTriangle[0], planeNormal);
-    
-    float divisor = GLKVector3DotProduct(planeNormal, direction);
-    if(fabs(divisor) < 0.0000001f) {
-        // The triangle and ray are parallel
-        return NO;
+GLKVector3 firstIntersectionOfRayWithTriangles(GLKVector3 rayStartPoint,
+                                               GLKVector3 rayDirection,
+                                               GLKVector3 *triangles,
+                                               int triangleCount) {
+    float minT = FLT_MAX;
+    for(int i = 0; i < triangleCount; i++) {
+        GLKVector3 *triangle = &triangles[3*i];
+        
+        GLKVector3 planeNormal = GLKVector3Normalize(GLKVector3CrossProduct(GLKVector3Subtract(triangle[1], triangle[0]),
+                                                                            GLKVector3Subtract(triangle[2], triangle[1])));
+        float d = -GLKVector3DotProduct(triangle[0], planeNormal);
+        
+        float divisor = GLKVector3DotProduct(planeNormal, rayDirection);
+        if(fabs(divisor) < 0.0000001f) {
+            // The triangle and ray are parallel
+            continue;
+        }
+        
+        float t = - (d + GLKVector3DotProduct(planeNormal, rayStartPoint)) / divisor;
+        if(t < 0) {
+            continue;
+        }
+        
+        GLKVector3 intersection = GLKVector3Add(rayStartPoint, GLKVector3MultiplyScalar(rayDirection, t));
+        
+        GLKVector3 v[] =
+        {
+            GLKVector3Normalize(GLKVector3Subtract(intersection, triangle[0])),
+            GLKVector3Normalize(GLKVector3Subtract(intersection, triangle[1])),
+            GLKVector3Normalize(GLKVector3Subtract(intersection, triangle[2]))
+        };
+        
+        // Angles around intersection should total 360 degrees (2 PI)
+        float angleSum = acosf(GLKVector3DotProduct(v[0], v[1])) + acosf(GLKVector3DotProduct(v[1], v[2])) + acosf(GLKVector3DotProduct(v[2], v[0]));
+        
+        // taking abs(angleSum) makes the order of the triangle vertices unimportant (probably)
+        if(fabs(fabs(angleSum) - (2 * M_PI)) < 0.001) {
+            minT = MIN(minT, t);
+        }
     }
-    
-    float t = - (d + GLKVector3DotProduct(planeNormal, startPoint)) / divisor;
-    
-    GLKVector3 intersection = GLKVector3Add(startPoint, GLKVector3MultiplyScalar(direction, t));
-    
-    GLKVector3 v[] =
-    {
-        GLKVector3Normalize(GLKVector3Subtract(intersection, planeTriangle[0])),
-        GLKVector3Normalize(GLKVector3Subtract(intersection, planeTriangle[1])),
-        GLKVector3Normalize(GLKVector3Subtract(intersection, planeTriangle[2]))
-    };
-    
-    // Angles around intersection should total 360 degrees (2 PI)
-    float angleSum = acosf(GLKVector3DotProduct(v[0], v[1])) + acosf(GLKVector3DotProduct(v[1], v[2])) + acosf(GLKVector3DotProduct(v[2], v[0]));
-    
-    // taking abs(angleSum) makes the order of the triangle vertices unimportant (probably)
-    return fabs(fabs(angleSum) - (2 * M_PI)) < 0.1;
+    if(minT != FLT_MAX) {
+        return GLKVector3Add(rayStartPoint, GLKVector3MultiplyScalar(rayDirection, minT));
+    }
+    else return GLKVector3Make(0, 0, 0);
 }
 
 #pragma mark - Properties copying/interpolation

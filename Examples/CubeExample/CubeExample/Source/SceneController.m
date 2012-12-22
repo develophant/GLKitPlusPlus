@@ -52,13 +52,13 @@
     CubeNode.sharedEffect.light0.position = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.camera.modelViewMatrix, nil),
                                                                       GLKVector4Make(-3, 6, 6, 1));
     
-    
     [self.cube animateWithDuration:7.6 options:GPAnimationRepeat animations:^{
         self.cube.rx += 2 * M_PI;
         self.cube.ry += 4 * M_PI;
     }];
     
     self.cube.position = GLKVector3Make(-0.3, -1.5, 0);
+    self.cube.s = 2;
     [self.cube animateWithDuration:1 options:GPAnimationRepeat | GPAnimationAutoReverse animations:^{self.cube.x = 0.3;}];
     [self.cube animateWithDuration:2.3 options:GPAnimationRepeat | GPAnimationAutoReverse animations:^{self.cube.y = 1.5;}];
     [self addObserver:self forKeyPath:@"view.bounds" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:NULL];
@@ -77,7 +77,6 @@
     }
     [(GLKView *)self.view setContext:nil];
 }
-
 
 #pragma mark - Key value observing
 
@@ -107,7 +106,8 @@
 #pragma mark - Touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if([self.cube touchIsOnTop:[touches anyObject]]) {
+    CGPoint p = [[touches anyObject] locationInView:self.view];
+    if([self.cube touchedNodeOfUIKitPoint:p viewSize:self.view.bounds.size]) {
         [self.cube animateWithDuration:0.3 options:GPAnimationAutoReverse animations:^{
             self.cube.z -= 4;
         } key:@"touchScale"];

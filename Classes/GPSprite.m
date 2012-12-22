@@ -205,22 +205,21 @@ static GLKBaseEffect *SHARED_EFFECT;
 
 #pragma mark - Touch Handling
 
-- (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize {
-    if([super UIKitPointIsOnTop:p viewSize:viewSize]) return YES;
-    
-    if(self.attribsAreDirty)
+- (int)triangleCount {
+    return 2;
+}
+
+- (void)fillTriangles:(GLKVector3 *)triangles {
+    if(self.attribsAreDirty) {
         [self updateVertexAttributes];
+    }
     
-    GLKVector3 triangles[6] = {
-        GLKVector3Make(self.attribs[0].position.x, self.attribs[0].position.y, 0),
-        GLKVector3Make(self.attribs[1].position.x, self.attribs[1].position.y, 0),
-        GLKVector3Make(self.attribs[2].position.x, self.attribs[2].position.y, 0),
-        
-        GLKVector3Make(self.attribs[1].position.x, self.attribs[1].position.y, 0),
-        GLKVector3Make(self.attribs[2].position.x, self.attribs[2].position.y, 0),
-        GLKVector3Make(self.attribs[3].position.x, self.attribs[3].position.y, 0)
-    };
-    return [self UIKitPoint:p collidesWithTriangles:triangles triangleCount:2 viewSize:viewSize];
+    triangles[0] = GLKVector3Make(self.attribs[0].position.x, self.attribs[0].position.y, 0);
+    triangles[1] = GLKVector3Make(self.attribs[1].position.x, self.attribs[1].position.y, 0);
+    triangles[2] = GLKVector3Make(self.attribs[2].position.x, self.attribs[2].position.y, 0);
+    triangles[3] = GLKVector3Make(self.attribs[1].position.x, self.attribs[1].position.y, 0);
+    triangles[4] = GLKVector3Make(self.attribs[2].position.x, self.attribs[2].position.y, 0);
+    triangles[5] = GLKVector3Make(self.attribs[3].position.x, self.attribs[3].position.y, 0);
 }
 
 #pragma mark - Vertex handling

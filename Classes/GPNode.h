@@ -13,8 +13,6 @@ enum GPAnimationOptions
 {
     GPAnimationAutoReverse = 1<<0,
     GPAnimationRepeat = 1<<1,
-    GPAnimationBeginFrom = 1<<1,
-    
     GPAnimationNoEase = 1<<2,
     GPAnimationEaseIn = 1<<3,
     GPAnimationEaseOut = 1<<4,
@@ -67,8 +65,10 @@ typedef float(^GPNodeEasingCurve)(float f);
 @property BOOL userInteractionEnabled;
 
 @property (readonly) GLKMatrix4 modelViewMatrix;
+@property (readonly) GLKMatrix4 translationMatrix;
 
 @property (readwrite) GLKMatrix4 storedRotationMatrix;
+@property (readonly) GLKVector3 globalScale;
 
 + (GPNode *)node;
 
@@ -80,24 +80,27 @@ typedef float(^GPNodeEasingCurve)(float f);
 
 // Store
 - (void)storeCurrentRotation;
-- (void)storeScale;
-
 - (void)resetStoredRotation;
-- (void)resetStoredScale;
 
 - (void)draw;
 
-// Touch handling
-- (BOOL)touchIsOnTop:(UITouch *)touch;
-- (BOOL)UIKitPointIsOnTop:(CGPoint)p viewSize:(CGSize)viewSize;
-- (BOOL)UIKitPoint:(CGPoint)p collidesWithTriangles:(GLKVector3[])triangles
-     triangleCount:(int)triangleCount
-          viewSize:(CGSize)viewSize;
+// --- Touch handling ---
+- (GPNode *)touchedNodeOfUIKitPoint:(CGPoint)p viewSize:(CGSize)viewSize;
+- (GLKVector3)closestIntersectionOfUIKitPoint:(CGPoint)p
+                                     viewSize:(CGSize)viewSize;
 
-// Collision detection
-- (BOOL)rayWithstartPoint:(GLKVector3)startPoint
-                direction:(GLKVector3)direction
-     collidesWithTriangle:(GLKVector3 *)planeTriangle;
+GLKVector3 firstIntersectionOfRayWithTriangles(GLKVector3 rayStartPoint,
+                                               GLKVector3 rayDirection,
+                                               GLKVector3 *triangles,
+                                               int triangleCount);
+
+- (GLKVector3)convertPoint:(GLKVector3)p fromNode:(GPNode *)node;
+
+// This method should be overriden by subclasses to enable touch intersection detection
+@property (readonly) int triangleCount;
+- (void)fillTriangles:(GLKVector3 *)triangles;
+
+
 
 // Animation management
 - (void)finishAllAnimations;
