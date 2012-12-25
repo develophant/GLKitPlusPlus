@@ -38,7 +38,7 @@
     self.scene.camera = [[GPCamera alloc] init];
     self.scene.camera.z = 10;
     
-    self.cube = [[CubeNode alloc] initWithTextureNamed:@"companion_cube"];
+    self.cube = [[CubeNode alloc] initWithTextureNamed:@"mars_texture"];
     [self.scene addChild:self.cube];
     
     CubeNode.sharedEffect.light0.enabled = YES;
