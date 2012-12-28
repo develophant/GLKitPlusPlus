@@ -509,6 +509,7 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
 #pragma mark - Animation management
 
 - (BOOL)isAnimating {
+    NSLog(@"self.namedAnimators.count: %d, self.anonymousAnimators.count: %d", self.namedAnimators.count, self.anonymousAnimators.count);
     return self.namedAnimators.count > 0 || self.anonymousAnimators.count > 0;
 }
 
@@ -943,19 +944,38 @@ typedef void(^ChildrenWorkBlock)(GPNode *node);
                         key:(NSString *)animationKey
                      parent:(GPNodeAnimator *)parent
 {
-    GPNodeAnimator *animator = [self createAnimatorForKey:animationKey
-                                    beginFromCurrentState:beginFromCurrentState];
-    if(!animator) return;
-    
-    if(parent)
-        [parent.childAnimators addObject:animator];
-    
-    [animator runWithDuration:duration
-                  easingCurve:easingCurve
-                  autoReverse:autoReverse
-                        times:times
-                 updatesBlock:updates
-              completionBlock:completionBlock];
+    if(duration > 0) {
+        GPNodeAnimator *animator = [self createAnimatorForKey:animationKey
+                                        beginFromCurrentState:beginFromCurrentState];
+        if(!animator) return;
+        
+        if(parent)
+            [parent.childAnimators addObject:animator];
+        
+        [animator runWithDuration:duration
+                      easingCurve:easingCurve
+                      autoReverse:autoReverse
+                            times:times
+                     updatesBlock:updates
+                  completionBlock:^(BOOL finished)
+                      {
+                          if(finished) {
+                              if(animationKey) [self finishAnimationForKey:animationKey];
+                              else [self finishAnonymousAnimator:animator];
+                          }
+                          else {
+                              if(animationKey) [self stopAnimationForKey:animationKey];
+                              else [self stopAnonymousAnimator:animator];
+                          }
+                          
+                          if(completionBlock)
+                              completionBlock(finished);
+                      }];
+    }
+    else {
+        updates(autoReverse ? 0 : 1);
+        completionBlock(YES);
+    }
 }
 
 // This is where the magic happens

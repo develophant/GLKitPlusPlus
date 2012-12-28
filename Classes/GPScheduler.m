@@ -33,17 +33,17 @@ static GPScheduler *SHARED_INSTANCE;
 }
 
 - (void)scheduleUpdates:(id)obj {
-    [self.scheduledObjects addObject:[NSValue valueWithNonretainedObject:obj]];
+    [self.scheduledObjects addObject:obj];
 }
 
 - (void)unscheduleUpdates:(id)obj {
-    [self.scheduledObjects removeObject:[NSValue valueWithNonretainedObject:obj]];
+    [self.scheduledObjects removeObject:obj];
 }
 
 - (void)update:(GLKViewController *)vc {
     
-    for(NSValue *objAsValue in [self.scheduledObjects copy]) {
-        [[objAsValue nonretainedObjectValue] update:vc];
+    for(id obj in [self.scheduledObjects copy]) {
+        [obj update:vc];
     };
 }
 
